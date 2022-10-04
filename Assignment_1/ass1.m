@@ -7,18 +7,15 @@ set(groot,'defaultLegendInterpreter','latex');
 
 %% 1) Download monthly mean sunspot number and solar radio flux F10.7cm
 
-% Format of data: 
-%1 column - year  
-%2 column – month 
-%3 column – monthly solar radio flux at 10.7 cm 
-%4 column – monthly sunspot number
-
 data = load('data_group8.mat');
-
+y = data.data_group8(:,1); % year
+m = data.data_group8(:,2); % month
+m_flux =  data.data_group8(:,3); % monthly solar radio flux at 10.7 cm 
+m_sun =  data.data_group8(:,4); % monthly sunspot number
 
 %% 2) Plot the monthly mean sunspot number and solar radio flux F10.7 cm 
 % for visual representation. 
 
-
+figure(1)
 
 

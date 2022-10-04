@@ -19,8 +19,6 @@ m_sun =  data.data_group8(:,4); % monthly sunspot number
 
 %% 3) Make scatter plot between monthly mean sunspot number and solar radio flux F10.7 cm
 
-
-
 figure(1)
 
 

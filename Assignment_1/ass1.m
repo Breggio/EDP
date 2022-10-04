@@ -17,8 +17,15 @@ m_sun =  data.data_group8(:,4); % monthly sunspot number
 %% 2) Plot the monthly mean sunspot number and solar radio flux F10.7 cm 
 % for visual representation. 
 
+plot(m_flux, y, 'k', 'LineWidth', 1.2)
+plot(m_sun, y, 'k', 'LineWidth', 1.2)
+grid on; grid minor
+xlabel('Years', 'FontSize', 25)
+ylabel('Years', 'FontSize', 25)
+
+
 %% 3) Make scatter plot between monthly mean sunspot number and solar radio flux F10.7 cm
 
-figure(1)
+
 
 

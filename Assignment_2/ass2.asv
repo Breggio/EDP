@@ -1,6 +1,6 @@
 %% Comparison of the exponential and running mean for random walk model
 
-close all; clear; clc;
+close all; clear all; clc;
 
 set(0,'defaulttextInterpreter','latex');
 set(groot,'defaultAxesTickLabelInterpreter','latex');
@@ -9,15 +9,15 @@ set(groot,'defaultLegendInterpreter','latex');
 %% First part: Determination of optimal smoothing constant in exponential mean 
 
 sigma_w2 = 12;
-sigma_eta2 = 9;
+sigma_eta = 9;
 
 n_1 = 300;
 n_2 = 3000;
 
 incond = 10;
 
-[x_1, x_hat_1, z_1, alpha_1, sigma_eta2_1, sigma_w2_1] = fun(n_1, sigma_w2, sigma_eta2, incond);
-[x_2, x_hat_2, z_2, alpha_2, sigma_eta2_2, sigma_w2_2] = fun(n_2, sigma_w2, sigma_eta2, incond);
+[x_1, x_hat_1, z_1, alpha_1, sigma_eta2_1, sigma_w2_1] = smoother(n_1, sigma_w2, sigma_eta, incond);
+[x_2, x_hat_2, z_2, alpha_2, sigma_eta2_2, sigma_w2_2] = smoother(n_2, sigma_w2, sigma_eta, incond);
 
 sigma_w2_1
 sigma_w2_2
@@ -77,6 +77,6 @@ for i=1:n_3
 end
 
 csi_n = sigma_w_n / sigma_eta_n;
-alpha_n = (-csi_n + sqrt(csi_n^2 + 4*csi_n))/2 % correct bc should be between 0,1
+alpha_n = (-csi_n + sqrt(csi_n^2 + 4*csi_n))/2; % correct bc should be between 0,1
 
 

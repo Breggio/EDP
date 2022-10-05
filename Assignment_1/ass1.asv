@@ -114,13 +114,17 @@ m_flux_raw_new = R_raw * beta_hat_raw;
 %% 10) Determine the variance of estimation error of solar radio flux
 
 diff = [];
-diff_raw = [];
+diff = [];
 
 for i = 1:length(m_flux_mean)
     diff = [diff; (m_flux_mean(i)-m_flux_mean_new(i))^2];
-    diff_raw = [diff_raw; (m_flux(i)-m_flux_raw_new(i))^2];
-
 end
 
 var = 1/(length(m_flux_mean_new) - 1) * sum(diff)
-var_raw = 1/(length(m_flux_raw_new) - 1) * sum(diff_raw)
+
+
+
+%% 11) EXTRA doing the same passages, but with the raw data to check the 
+% variance difference
+
+

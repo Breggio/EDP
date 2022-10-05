@@ -17,25 +17,34 @@ index = [1:length(years)];
 
 %% 2) Plot the monthly mean sunspot number and solar radio flux F10.7 cm 
 %     for visual representation. 
-hold on
+
 figure(1)
-
-yyaxis left
-plot(index, m_flux, 'k', 'LineWidth', 1.2)
-grid on; grid minor
-xlabel('Years', 'FontSize', 30)
-ylabel('Solar radio flux F10.7 cm', 'FontSize', 30)
-
-yyaxis right
+plot(index, m_flux, 'c', 'LineWidth', 1.2)
+hold on
 plot(index, m_sun, 'm', 'LineWidth', 1.2)
 grid on; grid minor
-ylabel('Sunspot number', 'FontSize', 30)
-
+xlabel('Years', 'FontSize', 30)
+ylabel('Solar activity indicator', 'FontSize', 30)
 legend('Solar radio flux F10.7 cm', 'Sunspot number', 'FontSize', 30) 
-xlim([1 526])
-hold off
-%add the title in latex
 
+% hold on
+% figure(1)
+% 
+% yyaxis left
+% plot(index, m_flux, 'k', 'LineWidth', 1.2)
+% grid on; grid minor
+% xlabel('Years', 'FontSize', 30)
+% ylabel('Solar radio flux F10.7 cm', 'FontSize', 30)
+% 
+% yyaxis right
+% plot(index, m_sun, 'm', 'LineWidth', 1.2)
+% grid on; grid minor
+% ylabel('Sunspot number', 'FontSize', 30)
+% 
+% legend('Solar radio flux F10.7 cm', 'Sunspot number', 'FontSize', 30) 
+% xlim([1 526])
+% hold off
+%add the title in latex
 
 %% 3) Make scatter plot between monthly mean sunspot number and solar radio flux F10.7 cm
 figure(2)
@@ -66,23 +75,23 @@ for i = 7:(length(index) - 6)
 end
 
 
-figure(3)
-hold on
-
-yyaxis left
-plot(index, m_flux_mean, 'k', 'LineWidth', 1.2)
-grid on; grid minor
-xlabel('Years', 'FontSize', 30)
-ylabel('Solar radio flux F10.7 cm', 'FontSize', 30)
-
-yyaxis right
-plot(index, m_sun_mean, 'm', 'LineWidth', 1.2)
-grid on; grid minor
-ylabel('Sunspot number', 'FontSize', 30)
-
-legend('Solar radio flux F10.7 cm', 'Sunspot number', 'FontSize', 30) 
-xlim([1 526])
-hold off
+% figure(3)
+% hold on
+% 
+% yyaxis left
+% plot(index, m_flux_mean, 'k', 'LineWidth', 1.2)
+% grid on; grid minor
+% xlabel('Years', 'FontSize', 30)
+% ylabel('Solar radio flux F10.7 cm', 'FontSize', 30)
+% 
+% yyaxis right
+% plot(index, m_sun_mean, 'm', 'LineWidth', 1.2)
+% grid on; grid minor
+% ylabel('Sunspot number', 'FontSize', 30)
+% 
+% legend('Solar radio flux F10.7 cm', 'Sunspot number', 'FontSize', 30) 
+% xlim([1 526])
+% hold off
 %add the title in latex
 
 %% 6-7) Construction of multi-dimensional linear regression
@@ -114,17 +123,14 @@ m_flux_raw_new = R_raw * beta_hat_raw;
 %% 10) Determine the variance of estimation error of solar radio flux
 
 diff = [];
-diff = [];
+diff_raw = [];
 
 for i = 1:length(m_flux_mean)
+
     diff = [diff; (m_flux_mean(i)-m_flux_mean_new(i))^2];
+    diff_raw = [diff_raw; (m_flux(i)-m_flux_raw_new(i))^2];
+
 end
 
 var = 1/(length(m_flux_mean_new) - 1) * sum(diff)
-
-
-
-%% 11) EXTRA doing the same passages, but with the raw data to check the 
-% variance difference
-
-
+var_raw = 1/(length(m_flux_raw_new) - 1) * sum(diff_raw)

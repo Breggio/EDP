@@ -27,6 +27,9 @@ xlabel('Years', 'FontSize', 30)
 ylabel('Solar activity indicator', 'FontSize', 30)
 legend('Solar radio flux F10.7 cm', 'Sunspot number', 'FontSize', 30) 
 xlim([0 length(index)])
+xticks([linspace(1,length(index), 12)])
+xticklabels({'1953','1957','1961','1965','1969','1973','1977','1981',...
+     '1985', '1989', '1993', '1997'})
 
 % hold on
 % figure(1)
@@ -54,6 +57,9 @@ grid on; grid minor
 xlabel('Sunspot number', 'FontSize', 30)
 ylabel('Solar radio flux F10.7 cm', 'FontSize', 30)
 xlim([0 length(index)])
+xticks([linspace(1,length(index), 12)])
+xticklabels({'1953','1957','1961','1965','1969','1973','1977','1981',...
+     '1985', '1989', '1993', '1997'})
 % we see a LINEAR correlation betweeen the number of sunspots and the solar radio flux 
 
 %% 4) Make smoothing of monthly mean data (sunspot number and solar radio flux F10.7) 
@@ -79,10 +85,14 @@ figure(3)
 plot(index, m_flux_mean, 'k', 'LineWidth', 1.2)
 hold on
 plot(index, m_sun_mean, 'm', 'LineWidth', 1.2)
+grid on; grid minor
 xlabel('Years', 'FontSize', 30)
 ylabel('Solar activity indicator', 'FontSize', 30)
 legend('Solar radio flux F10.7 cm', 'Sunspot number', 'FontSize', 30) 
 xlim([0 length(index)])
+xticks([linspace(1,length(index), 12)])
+xticklabels({'1953','1957','1961','1965','1969','1973','1977','1981',...
+     '1985', '1989', '1993', '1997'})
 
 % figure(3)
 % hold on

@@ -60,6 +60,7 @@ xlim([0 length(index)])
 xticks([linspace(1,length(index), 12)])
 xticklabels({'1953','1957','1961','1965','1969','1973','1977','1981',...
      '1985', '1989', '1993', '1997'})
+
 % we see a LINEAR correlation betweeen the number of sunspots and the solar radio flux 
 
 %% 4) Make smoothing of monthly mean data (sunspot number and solar radio flux F10.7) 

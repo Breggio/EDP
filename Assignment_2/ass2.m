@@ -29,24 +29,24 @@ sigma_eta2_2
 % sigma and eta
 
 figure(1)
-plot(x_1, 'c', 'LineWidth', 1.2)
+plot(x_1, 'c', 'LineWidth', 1.5)
 hold on
-plot(x_hat_1, 'k', 'LineWidth', 1.2)
-plot(z_1, 'm', 'LineWidth', 1.2)
+plot(x_hat_1, 'k', 'LineWidth', 1.5)
+plot(z_1, 'm', 'LineWidth', 1.5)
 grid on; grid minor
 xlabel('Steps', 'FontSize', 30)
 ylabel('Data', 'FontSize', 30)
-legend('True Data', 'Smoothed Data', 'Measurements', 'FontSize', 30)
+legend('Trajectory', 'Measuraments', 'Exponentially Smoothed', 'FontSize', 30)
 
 figure(2)
 plot(x_2, 'c', 'LineWidth', 1.2)
 hold on
-plot(z_2, 'm', 'LineWidth', 1.2)
-plot(x_hat_2, 'k', 'LineWidth', 1.2)
+plot(z_2, 'k', 'LineWidth', 1.2)
+plot(x_hat_2, 'm', 'LineWidth', 1.2)
 grid on; grid minor
 xlabel('Steps', 'FontSize', 30)
 ylabel('Data', 'FontSize', 30)
-legend('True Data', 'Smoothed Data', 'Measurements', 'FontSize', 30) 
+legend('Trajectory', 'Measuraments', 'Exponentially Smoothed', 'FontSize', 30)
 
 %% Second Part: Comparison of methodical errors of exponential and running mean. 
 
@@ -113,10 +113,11 @@ end
 figure(3)
 plot(x_n, 'c', 'LineWidth', 1.2)
 hold on
+plot(z_n, 'b', 'LineWidth', 1.2)
 plot(x_hat_run, 'm', 'LineWidth', 1.2)
 plot(x_hat_exp, 'k', 'LineWidth', 1.2)
 grid on; grid minor
 xlabel('Steps', 'FontSize', 30)
 ylabel('Data', 'FontSize', 30)
-legend('Trajectory', 'Running', 'Exponential', 'FontSize', 30) 
+legend('Trajectory', 'Measuraments', 'Running Mean', 'Exponential Mean', 'FontSize', 30) 
 % xlim([0 300])

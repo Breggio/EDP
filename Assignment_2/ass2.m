@@ -111,13 +111,31 @@ for i = 2:n_3
 end
 
 figure(3)
-plot(x_n, 'c', 'LineWidth', 1.2)
+plot(x_n, 'k', 'LineWidth', 1.2)
 hold on
-plot(z_n, 'b', 'LineWidth', 1.2)
-plot(x_hat_run, 'm', 'LineWidth', 1.2)
-plot(x_hat_exp, 'k', 'LineWidth', 1.2)
+plot(z_n, 'y', 'LineWidth', 1.2)
+plot(x_hat_run, 'b', 'LineWidth', 1.2)
+plot(x_hat_exp, 'r', 'LineWidth', 1.2)
 grid on; grid minor
 xlabel('Steps', 'FontSize', 30)
 ylabel('Data', 'FontSize', 30)
 legend('Trajectory', 'Measuraments', 'Running Mean', 'Exponential Mean', 'FontSize', 30) 
 % xlim([0 300])
+
+figure(4)
+plot(x_n, 'k', 'LineWidth', 1.2)
+hold on
+plot(x_hat_run, 'b', 'LineWidth', 1.2)
+grid on; grid minor
+xlabel('Steps', 'FontSize', 30)
+ylabel('Data', 'FontSize', 30)
+legend('Trajectory', 'Running Mean', 'FontSize', 30) 
+
+figure(5)
+plot(x_n, 'k', 'LineWidth', 1.2)
+hold on
+plot(x_hat_exp, 'r', 'LineWidth', 1.2)
+grid on; grid minor
+xlabel('Steps', 'FontSize', 30)
+ylabel('Data', 'FontSize', 30)
+legend('Trajectory', 'Exponential Mean', 'FontSize', 30) 

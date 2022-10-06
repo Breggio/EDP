@@ -41,8 +41,8 @@ legend('True Data', 'Smoothed Data', 'Measurements', 'FontSize', 30)
 figure(2)
 plot(x_2, 'c', 'LineWidth', 1.2)
 hold on
-plot(x_hat_2, 'k', 'LineWidth', 1.2)
 plot(z_2, 'm', 'LineWidth', 1.2)
+plot(x_hat_2, 'k', 'LineWidth', 1.2)
 grid on; grid minor
 xlabel('Steps', 'FontSize', 30)
 ylabel('Data', 'FontSize', 30)
@@ -98,10 +98,10 @@ x_hat_run = zeros(n_3,1);
 x_hat_run(1:j,1) = sum(z_n(1:j))/3;
 x_hat_run((n_3-j+1):n_3,1) = sum(z_n((n_3-j+1):n_3))/3;
 
-% for i = j:n_3-j
-%     x_hat_run(i) = 1/M * (z_n(i-3)+ z_n(i-2) + z_n(i-1) + z_n(i) + ...
-%     z_n(i+1) + z_n(i+2) + z_n(i+3));
-% end
+for i = j+1:n_3-j-1
+    x_hat_run(i) = 1/M * (z_n(i-3)+ z_n(i-2) + z_n(i-1) + z_n(i) + ...
+    z_n(i+1) + z_n(i+2) + z_n(i+3));
+end
 
 % Exponential mean (all previous measurements are used)
 x_hat_exp(1) = incond;
@@ -110,3 +110,13 @@ for i = 2:n_3
     x_hat_exp(i) = x_hat_exp(i-1) + alpha_n * (z_n(i) - x_hat_exp(i-1));
 end
 
+figure(3)
+plot(x_n, 'c', 'LineWidth', 1.2)
+hold on
+plot(x_hat_run, 'm', 'LineWidth', 1.2)
+plot(x_hat_exp, 'k', 'LineWidth', 1.2)
+grid on; grid minor
+xlabel('Steps', 'FontSize', 30)
+ylabel('Data', 'FontSize', 30)
+legend('Trajectory', 'Running', 'Exponential', 'FontSize', 30) 
+% xlim([0 300])

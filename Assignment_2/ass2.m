@@ -77,6 +77,37 @@ for i=1:n_3
 end
 
 csi_n = sigma_w_n / sigma_eta_n;
-alpha_n = (-csi_n + sqrt(csi_n^2 + 4*csi_n))/2 % correct bc should be between 0,1
+alpha_n = (-csi_n + sqrt(csi_n^2 + 4*csi_n))/2; % correct bc should be between 0,1
 
+%% 4) Determine  the  window  size  M  (use  round  values)  that  provides  
+% equality  of  σRM2   and  σES2  using determined smoothing constant α 
+
+% sigma_eta_n
+
+% Window size M
+
+M = round((2-alpha_n)/alpha_n); % 7
+
+%% 5) Apply  running  mean  using  determined  window  size  𝑀  and ...
+% exponential  mean. using determined smoothing constant 𝛼 to measurements 𝑧𝑖. 
+% Plot true trajectory  𝑋𝑖, measurements z𝑖, running and exponential mean.  
+
+% Running mean (last measurements are used)
+j = (M-1)/2;
+
+x_hat_run = zeros(n_3,1);
+
+x_hat_run(1:j,1) = sum(z_n(1:j))/3;
+x_hat_run((n_3-j+1):n_3,1) = sum(z_n((n_3-j+1):n_3))/3;
+
+for i = j:n_3-j
+    x_hat_run(i) = 1/M * ()
+end
+
+% Exponential mean (all previous measurements are used)
+x_hat_exp(1) = incond;
+
+for i = 2:n_3
+    x_hat_exp(i) = x_hat_exp(i-1) + alpha_n * (z_n(i) - x_hat_exp(i-1));
+end
 

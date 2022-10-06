@@ -1,6 +1,6 @@
 %% Comparison of the exponential and running mean for random walk model
 
-close all; clear all; clc;
+close all; clear; clc;
 
 set(0,'defaulttextInterpreter','latex');
 set(groot,'defaultAxesTickLabelInterpreter','latex');
@@ -9,15 +9,15 @@ set(groot,'defaultLegendInterpreter','latex');
 %% First part: Determination of optimal smoothing constant in exponential mean 
 
 sigma_w2 = 12;
-sigma_eta = 9;
+sigma_eta2 = 9;
 
 n_1 = 300;
 n_2 = 3000;
 
 incond = 10;
 
-[x_1, x_hat_1, z_1, alpha_1, sigma_eta2_1, sigma_w2_1] = smoother(n_1, sigma_w2, sigma_eta, incond);
-[x_2, x_hat_2, z_2, alpha_2, sigma_eta2_2, sigma_w2_2] = smoother(n_2, sigma_w2, sigma_eta, incond);
+[x_1, x_hat_1, z_1, alpha_1, sigma_eta2_1, sigma_w2_1] = fun(n_1, sigma_w2, sigma_eta2, incond);
+[x_2, x_hat_2, z_2, alpha_2, sigma_eta2_2, sigma_w2_2] = fun(n_2, sigma_w2, sigma_eta2, incond);
 
 sigma_w2_1
 sigma_w2_2
@@ -79,4 +79,38 @@ end
 csi_n = sigma_w_n / sigma_eta_n;
 alpha_n = (-csi_n + sqrt(csi_n^2 + 4*csi_n))/2; % correct bc should be between 0,1
 
+%% 4) Determine  the  window  size  M  (use  round  values)  that  provides  
+% equality  of  σRM2   and  σES2  using determined smoothing constant α 
+
+% sigma_eta_n
+
+% Window size M
+
+M = round((2-alpha_n)/alpha_n); % 7
+
+%% 5) Apply  running  mean  using  determined  window  size  𝑀  and ...
+% exponential  mean. using determined smoothing constant 𝛼 to measurements 𝑧𝑖. 
+% Plot true trajectory  𝑋𝑖, measurements z𝑖, running and exponential mean.  
+
+% Running mean (last measurements are used)
+j = n_3 - (M-1)/2;
+k = n_3 + (M-1)/2;
+
+x_hat_run = zeros(k-j, 1);
+ii = length(k-j,1);
+
+for i = j:k
+    x_hat_run = [x_hat_run; z_n(i)];
+end
+
+x_hat_run(1:(k-j), 1) = z_n(j:k,1) 
+
+x_hat_run = 1/M * sum(x_hat_run);
+
+% Exponential mean (all previous measurements are used)
+x_hat_exp(1) = incond;
+
+for i = 2:n_3
+    x_hat_exp(i) = x_hat_exp(i-1) + alpha_n * (z_n(i) - x_hat_exp(i-1));
+end
 

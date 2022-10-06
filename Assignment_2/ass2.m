@@ -100,7 +100,7 @@ x_hat_run((n_3-j+1):n_3,1) = sum(z_n((n_3-j+1):n_3))/3;
 
 for i = j+1:n_3-j-1
     x_hat_run(i) = 1/M * (z_n(i-3)+ z_n(i-2) + z_n(i-1) + z_n(i) + ...
-    z_n(i+1) + z_n(i+2) + z_n(i+3));
+    z_n(i+1) + z_n(i+2) + z_n(i+3)); 
 end
 
 % Exponential mean (all previous measurements are used)

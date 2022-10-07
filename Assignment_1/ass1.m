@@ -51,6 +51,7 @@ xticklabels({'1953','1957','1961','1965','1969','1973','1977','1981',...
 %add the title in latex
 
 %% 3) Make scatter plot between monthly mean sunspot number and solar radio flux F10.7 cm
+
 figure(2)
 scatter(m_sun, m_flux, 'b', 'LineWidth', 1.2) 
 grid on; grid minor

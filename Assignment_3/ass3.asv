@@ -116,7 +116,6 @@ var_ind_run = sum(var_ind_run)
 
 % n = n_3 = 300
 
-
 x(1) = 5;
 v(1) = 0;
 t = 0.1;
@@ -139,22 +138,22 @@ for i = 1:n_3
 end
 
 % Running mean
-M_guess = [50, 100, 150, 200, 250];
+M_guess = [25, 50, 100, 150, 200, 250];
 
 for k = 1:length(M_guess)
       x_hat_run_n(k,:) = movmean(z, M_guess(k));
 end
 
 % Forward mean
-alpha_guess = [0.05, 0.075, 0.1, 0.15, 0.2];
+alpha_guess = [0.01, 0.02, 0.075, 0.1, 0.15, 0.2];
 x_hat_forw_n = zeros(length(alpha_guess), n_3);
 x_hat_forw_n(:,1) = z(1);
+
 for j = 1:length(alpha_guess)
     for i = 2:n_3
-        x_hat_forw_n(j,i) = x_hat_forw_n(i - 1) + alpha_guess(j)*(z(i) - x_hat_forw_n(i - 1));
+        x_hat_forw_n(j,i) = x_hat_forw_n(j,i - 1) + alpha_guess(j)*(z(i) - x_hat_forw_n(j,i - 1));
     end
 end
-
 
 % Variability indicators for different alpha and M
 var_ind_forw_n = zeros(length(alpha_guess), n_3);
@@ -174,39 +173,41 @@ end
 
 % Deviation indicators for different alpha and M
 dev_ind_forw_n = zeros(length(alpha_guess), n_3);
-var_ind_run_n = zeros(length(alpha_guess), n_3);
+dev_ind_run_n = zeros(length(alpha_guess), n_3);
 
-var_ind_forw_sum = [];
-var_ind_run_sum = [];
+dev_ind_forw_sum = [];
+dev_ind_run_sum = [];
 
 for j = 1:length(alpha_guess)
-    for i = 1:(n_3 - 2)
-        var_ind_forw_n(j,i) = (x_hat_forw_n(j,i + 2) - 2*x_hat_forw_n(j,i + 1) + x_hat_forw_n(j,i))^2;
-        var_ind_run_n(j,i) = (x_hat_run_n(j,i + 2) - 2*x_hat_run_n(j,i + 1) + x_hat_run_n(j,i))^2;
+    for i = 1:n_3
+        dev_ind_forw_n(j,i) = (z(i) - x_hat_forw_n(j,i))^2;
+        dev_ind_run_n(j,i) = (z(i) - x_hat_run_n(j,i))^2;
     end
-    var_ind_forw_sum(j) = sum(var_ind_forw_n(j,:));
-    var_ind_run_sum(j) = sum(var_ind_run_n(j,:));
+    dev_ind_forw_sum(j) = sum(dev_ind_forw_n(j,:));
+    dev_ind_run_sum(j) = sum(dev_ind_run_n(j,:));
 end
 
-% figure(2)
-% plot(x, 'r', 'LineWidth', 1.2)
-% hold on
-% plot(z, 'k', 'LineWidth', 1.2)
-% plot(x_hat_run_new, 'b', 'LineWidth', 1.2)
-% grid on; grid minor
-% xlabel('Steps', 'FontSize', 30)
-% ylabel('Data', 'FontSize', 30)
-% legend('Trajectory', 'Measurements', 'Running Mean', 'FontSize', 30)
+% we are taking into account the highest M (5th line) 
 
-% figure(3)
-% plot(x, 'r', 'LineWidth', 1.2)
-% hold on
-% plot(z, 'k', 'LineWidth', 1.2)
-% plot(x_hat_forw_n, 'b', 'LineWidth', 1.2)
-% grid on; grid minor
-% xlabel('Steps', 'FontSize', 30)
-% ylabel('Data', 'FontSize', 30)
-% legend('Trajectory', 'Measurements', 'Exponential Mean', 'FontSize', 30)
+figure(2)
+plot(x, 'r', 'LineWidth', 1.2)
+hold on
+plot(z, 'k', 'LineWidth', 1.2)
+plot(x_hat_run_n(5,:), 'c', 'LineWidth', 1.2)
+grid on; grid minor
+xlabel('Steps', 'FontSize', 30)
+ylabel('Data', 'FontSize', 30)
+legend('Trajectory', 'Measurements', 'Running Mean', 'FontSize', 30)
+
+figure(3)
+plot(x, 'r', 'LineWidth', 1.2)
+hold on
+plot(z, 'k', 'LineWidth', 1.2)
+plot(x_hat_forw_n(1,:), 'c', 'LineWidth', 1.2)
+grid on; grid minor
+xlabel('Steps', 'FontSize', 30)
+ylabel('Data', 'FontSize', 30)
+legend('Trajectory', 'Measurements', 'Exponential Mean', 'FontSize', 30)
 
 %% 4) Second trajectory: Generate cyclic trajectory 𝑋𝑖 according to the equation 
 
@@ -274,18 +275,68 @@ figure(5)
 plot(x_sin, 'r', 'LineWidth', 1.2)
 hold on
 plot(z_4, 'k', 'LineWidth', 1.2)
-plot(x_hat_run(end,:), 'c', 'LineWidth', 1.2)
+plot(x_hat_run(1,:), 'c', 'LineWidth', 1.2)
 grid on; grid minor
 xlabel('Steps', 'FontSize', 30)
 ylabel('Data', 'FontSize', 30)
-legend('Trajectory', 'Measurements', 'Running Mean', 'FontSize', 30)
+legend('Trajectory', 'Measurements', 'Running Mean 15', 'FontSize', 30)
 
+figure(6)
+plot(x_sin, 'r', 'LineWidth', 1.2)
+hold on
+plot(z_4, 'k', 'LineWidth', 1.2)
+plot(x_hat_run(2,:), 'c', 'LineWidth', 1.2)
+grid on; grid minor
+xlabel('Steps', 'FontSize', 30)
+ylabel('Data', 'FontSize', 30)
+legend('Trajectory', 'Measurements', 'Running Mean 17', 'FontSize', 30)
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%55
-%
-% TO DO:
-%
-% ask about deviation and variability indicators
-% ask about M and alpha
-% ask for the final point, not clear what to do!
-%
+figure(7)
+plot(x_sin, 'r', 'LineWidth', 1.2)
+hold on
+plot(z_4, 'k', 'LineWidth', 1.2)
+plot(x_hat_run(3,:), 'c', 'LineWidth', 1.2)
+grid on; grid minor
+xlabel('Steps', 'FontSize', 30)
+ylabel('Data', 'FontSize', 30)
+legend('Trajectory', 'Measurements', 'Running Mean 19', 'FontSize', 30)
+
+figure(8)
+plot(x_sin, 'r', 'LineWidth', 1.2)
+hold on
+plot(z_4, 'k', 'LineWidth', 1.2)
+plot(x_hat_run(4,:), 'c', 'LineWidth', 1.2)
+grid on; grid minor
+xlabel('Steps', 'FontSize', 30)
+ylabel('Data', 'FontSize', 30)
+legend('Trajectory', 'Measurements', 'Running Mean 21', 'FontSize', 30)
+
+figure(9)
+plot(x_sin, 'r', 'LineWidth', 1.2)
+hold on
+plot(z_4, 'k', 'LineWidth', 1.2)
+plot(x_hat_run(5,:), 'c', 'LineWidth', 1.2)
+grid on; grid minor
+xlabel('Steps', 'FontSize', 30)
+ylabel('Data', 'FontSize', 30)
+legend('Trajectory', 'Measurements', 'Running Mean 23', 'FontSize', 30)
+
+figure(10)
+plot(x_sin, 'r', 'LineWidth', 1.2)
+hold on
+plot(z_4, 'k', 'LineWidth', 1.2)
+plot(x_hat_run(6,:), 'c', 'LineWidth', 1.2)
+grid on; grid minor
+xlabel('Steps', 'FontSize', 30)
+ylabel('Data', 'FontSize', 30)
+legend('Trajectory', 'Measurements', 'Running Mean 25', 'FontSize', 30)
+
+figure(11)
+plot(x_sin, 'r', 'LineWidth', 1.2)
+hold on
+plot(z_4, 'k', 'LineWidth', 1.2)
+plot(x_hat_run(7,:), 'c', 'LineWidth', 1.2)
+grid on; grid minor
+xlabel('Steps', 'FontSize', 30)
+ylabel('Data', 'FontSize', 30)
+legend('Trajectory', 'Measurements', 'Running Mean 27', 'FontSize', 30)

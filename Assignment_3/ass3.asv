@@ -116,6 +116,7 @@ var_ind_run = sum(var_ind_run)
 
 % n = n_3 = 300
 
+
 x(1) = 5;
 v(1) = 0;
 t = 0.1;
@@ -145,15 +146,15 @@ for k = 1:length(M_guess)
 end
 
 % Forward mean
-alpha_guess = [0.02, 0.075, 0.1, 0.15, 0.2];
+alpha_guess = [0.05, 0.075, 0.1, 0.15, 0.2];
 x_hat_forw_n = zeros(length(alpha_guess), n_3);
 x_hat_forw_n(:,1) = z(1);
-
 for j = 1:length(alpha_guess)
     for i = 2:n_3
-        x_hat_forw_n(j,i) = x_hat_forw_n(j,i - 1) + alpha_guess(j)*(z(i) - x_hat_forw_n(j,i - 1));
+        x_hat_forw_n(j,i) = x_hat_forw_n(i - 1) + alpha_guess(j)*(z(i) - x_hat_forw_n(i - 1));
     end
 end
+
 
 % Variability indicators for different alpha and M
 var_ind_forw_n = zeros(length(alpha_guess), n_3);
@@ -173,41 +174,39 @@ end
 
 % Deviation indicators for different alpha and M
 dev_ind_forw_n = zeros(length(alpha_guess), n_3);
-dev_ind_run_n = zeros(length(alpha_guess), n_3);
+var_ind_run_n = zeros(length(alpha_guess), n_3);
 
-dev_ind_forw_sum = [];
-dev_ind_run_sum = [];
+var_ind_forw_sum = [];
+var_ind_run_sum = [];
 
 for j = 1:length(alpha_guess)
-    for i = 1:n_3
-        dev_ind_forw_n(j,i) = (z(i) - x_hat_forw_n(j,i))^2;
-        dev_ind_run_n(j,i) = (z(i) - x_hat_run_n(j,i))^2;
+    for i = 1:(n_3 - 2)
+        var_ind_forw_n(j,i) = (x_hat_forw_n(j,i + 2) - 2*x_hat_forw_n(j,i + 1) + x_hat_forw_n(j,i))^2;
+        var_ind_run_n(j,i) = (x_hat_run_n(j,i + 2) - 2*x_hat_run_n(j,i + 1) + x_hat_run_n(j,i))^2;
     end
-    dev_ind_forw_sum(j) = sum(dev_ind_forw_n(j,:));
-    dev_ind_run_sum(j) = sum(dev_ind_run_n(j,:));
+    var_ind_forw_sum(j) = sum(var_ind_forw_n(j,:));
+    var_ind_run_sum(j) = sum(var_ind_run_n(j,:));
 end
 
-% we are taking into account the highest M (5th line) 
+% figure(2)
+% plot(x, 'r', 'LineWidth', 1.2)
+% hold on
+% plot(z, 'k', 'LineWidth', 1.2)
+% plot(x_hat_run_new, 'b', 'LineWidth', 1.2)
+% grid on; grid minor
+% xlabel('Steps', 'FontSize', 30)
+% ylabel('Data', 'FontSize', 30)
+% legend('Trajectory', 'Measurements', 'Running Mean', 'FontSize', 30)
 
-figure(2)
-plot(x, 'r', 'LineWidth', 1.2)
-hold on
-plot(z, 'k', 'LineWidth', 1.2)
-plot(x_hat_run_n(5,:), 'c', 'LineWidth', 1.2)
-grid on; grid minor
-xlabel('Steps', 'FontSize', 30)
-ylabel('Data', 'FontSize', 30)
-legend('Trajectory', 'Measurements', 'Running Mean', 'FontSize', 30)
-
-figure(3)
-plot(x, 'r', 'LineWidth', 1.2)
-hold on
-plot(z, 'k', 'LineWidth', 1.2)
-plot(x_hat_forw_n(1,:), 'c', 'LineWidth', 1.2)
-grid on; grid minor
-xlabel('Steps', 'FontSize', 30)
-ylabel('Data', 'FontSize', 30)
-legend('Trajectory', 'Measurements', 'Exponential Mean', 'FontSize', 30)
+% figure(3)
+% plot(x, 'r', 'LineWidth', 1.2)
+% hold on
+% plot(z, 'k', 'LineWidth', 1.2)
+% plot(x_hat_forw_n, 'b', 'LineWidth', 1.2)
+% grid on; grid minor
+% xlabel('Steps', 'FontSize', 30)
+% ylabel('Data', 'FontSize', 30)
+% legend('Trajectory', 'Measurements', 'Exponential Mean', 'FontSize', 30)
 
 %% 4) Second trajectory: Generate cyclic trajectory 𝑋𝑖 according to the equation 
 
@@ -286,7 +285,7 @@ legend('Trajectory', 'Measurements', 'Running Mean', 'FontSize', 30)
 %
 % TO DO:
 %
-% ask about deviation and variability indicators (DONE)
-% ask about M and alpha (DONE)
+% ask about deviation and variability indicators
+% ask about M and alpha
 % ask for the final point, not clear what to do!
 %

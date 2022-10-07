@@ -140,7 +140,7 @@ M_guess = 80;
 x_hat_run_new = movmean(z, M_guess);
 
 % Forward mean
-alpha_guess = 0.005;
+alpha_guess = 0.02;
 x_hat_forw_n(1) = incond;
 
 for i = 2:n_3

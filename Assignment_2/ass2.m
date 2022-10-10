@@ -16,6 +16,8 @@ n_2 = 3000;
 
 incond = 10;
 
+rng default
+
 [x_1, x_hat_1, z_1, alpha_1, sigma_eta2_1, sigma_w2_1] = fun(n_1, sigma_w2, sigma_eta2, incond);
 [x_2, x_hat_2, z_2, alpha_2, sigma_eta2_2, sigma_w2_2] = fun(n_2, sigma_w2, sigma_eta2, incond);
 
@@ -53,7 +55,7 @@ legend('Trajectory', 'Measuraments', 'Exponentially Smoothed', 'FontSize', 30)
 % 1-2-3) Generate a true trajectory using: 
 % - the random walk model
 % - using equation (2) {z(i)}
-% 3) Determine optimal smoothing coefficient 𝛼
+% 3) Determine optimal smoothing coefficient 
 
 n_3 = 300; % size of trajectory
 incond = 10; % initial condition
@@ -73,7 +75,7 @@ for i = 2:n_3
 end
 
 for i=1:n_3
-    z_n(i) = x_n(i) + eta_n(i); % Generate measurements 𝑧𝑖 of the process 𝑋𝑖 
+    z_n(i) = x_n(i) + eta_n(i); % Generate measurements ������������ of the process ������������ 
 end
 
 csi_n = sigma_w_n / sigma_eta_n;
@@ -86,9 +88,9 @@ alpha_n = (-csi_n + sqrt(csi_n^2 + 4*csi_n))/2; % correct bc should be between 0
 
 M = round((2-alpha_n)/alpha_n); % 7
 
-%% 5) Apply  running  mean  using  determined  window  size  𝑀  and ...
-% exponential  mean. using determined smoothing constant 𝛼 to measurements 𝑧𝑖. 
-% Plot true trajectory  𝑋𝑖, measurements z𝑖, running and exponential mean.  
+%% 5) Apply  running  mean  using  determined  window  size  M and ...
+% exponential  mean. using determined smoothing constant to measurements
+% Plot true trajectory, measurementd, running and exponential mean.  
 
 % Running mean (last measurements are used)
 j = (M-1)/2;
@@ -113,9 +115,9 @@ end
 figure(3)
 plot(x_n, 'k', 'LineWidth', 1.2)
 hold on
-plot(z_n, 'y', 'LineWidth', 1.2)
-plot(x_hat_run, 'b', 'LineWidth', 1.2)
-plot(x_hat_exp, 'r', 'LineWidth', 1.2)
+plot(z_n, 'MarkerFaceColor', [0.9290 0.6940 0.1250], 'LineWidth', 1.2)
+plot(x_hat_run, 'c', 'LineWidth', 1.2)
+plot(x_hat_exp, 'm', 'LineWidth', 1.2)
 grid on; grid minor
 xlabel('Steps', 'FontSize', 30)
 ylabel('Data', 'FontSize', 30)

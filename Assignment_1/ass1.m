@@ -1,5 +1,7 @@
 %% The relationship between solar radio flux F10.7 and sunspot number 
 
+% Written by Irina Yareshko and Luca Breggion, Skoltech 2022
+
 close all; clear all; clc;
 
 set(0,'defaulttextInterpreter','latex');
@@ -31,25 +33,6 @@ xticks([linspace(1,length(index), 12)])
 xticklabels({'1953','1957','1961','1965','1969','1973','1977','1981',...
      '1985', '1989', '1993', '1997'})
 
-% hold on
-% figure(1)
-% 
-% yyaxis left
-% plot(index, m_flux, 'k', 'LineWidth', 1.2)
-% grid on; grid minor
-% xlabel('Years', 'FontSize', 30)
-% ylabel('Solar radio flux F10.7 cm', 'FontSize', 30)
-% 
-% yyaxis right
-% plot(index, m_sun, 'm', 'LineWidth', 1.2)
-% grid on; grid minor
-% ylabel('Sunspot number', 'FontSize', 30)
-% 
-% legend('Solar radio flux F10.7 cm', 'Sunspot number', 'FontSize', 30) 
-% xlim([1 526])
-% hold off
-%add the title in latex
-
 %% 3) Make scatter plot between monthly mean sunspot number and solar radio flux F10.7 cm
 
 figure(2)
@@ -57,18 +40,22 @@ scatter(m_sun, m_flux, 'b', 'LineWidth', 1.2)
 grid on; grid minor
 xlabel('Sunspot number', 'FontSize', 30)
 ylabel('Solar radio flux F10.7 cm', 'FontSize', 30)
-xlim([0 length(index)])
+xlim([0 365])
+
 % we see a LINEAR correlation betweeen the number of sunspots and the solar radio flux 
 
 %% 4) Make smoothing of monthly mean data (sunspot number and solar radio flux F10.7) 
 %     by 13-month running mean.
 
+% Initialize vectors
 m_sun_mean = zeros(length(m_sun),1);
 m_flux_mean = zeros(length(m_flux),1);
 
+% First 6 elements - Arithmetic Mean
 m_sun_mean(1:6) = 1/6*sum(m_sun(1:6));
 m_flux_mean(1:6) = 1/6*sum(m_flux(1:6));
 
+% Last 6 elements - Arithmetic Mean
 m_sun_mean((length(m_sun_mean) - 5):length(m_sun_mean)) = 1/6 * sum(m_sun(length(m_sun)-5:length(m_sun)));
 m_flux_mean((length(m_flux_mean) - 5):length(m_flux_mean)) = 1/6 * sum(m_flux(length(m_flux)-5:length(m_flux)));
 
@@ -91,25 +78,6 @@ xlim([0 length(index)])
 xticks([linspace(1,length(index), 12)])
 xticklabels({'1953','1957','1961','1965','1969','1973','1977','1981',...
      '1985', '1989', '1993', '1997'})
-
-% figure(3)
-% hold on
-% 
-% yyaxis left
-% plot(index, m_flux_mean, 'k', 'LineWidth', 1.2)
-% grid on; grid minor
-% xlabel('Years', 'FontSize', 30)
-% ylabel('Solar radio flux F10.7 cm', 'FontSize', 30)
-% 
-% yyaxis right
-% plot(index, m_sun_mean, 'm', 'LineWidth', 1.2)
-% grid on; grid minor
-% ylabel('Sunspot number', 'FontSize', 30)
-% 
-% legend('Solar radio flux F10.7 cm', 'Sunspot number', 'FontSize', 30) 
-% xlim([1 526])
-% hold off
-%add the title in latex
 
 %% 6-7) Construction of multi-dimensional linear regression
 
@@ -137,6 +105,19 @@ beta_hat_raw = (transpose(R_raw)*R_raw)^(-1)*transpose(R_raw)*m_flux;
 m_flux_mean_new = R * beta_hat;
 m_flux_raw_new = R_raw * beta_hat_raw;
 
+figure(3)
+plot(index, m_flux_mean_new, 'b', 'LineWidth', 1.2)
+hold on
+plot(index, m_flux_raw_new, 'r', 'LineWidth', 1.2)
+grid on; grid minor
+xlabel('Years', 'FontSize', 30)
+ylabel('Solar activity indicator', 'FontSize', 30)
+legend('Smoothed solar radio flux ', 'Initial solar radio flux', 'FontSize', 30) 
+xlim([0 length(index)])
+xticks([linspace(1,length(index), 12)])
+xticklabels({'1953','1957','1961','1965','1969','1973','1977','1981',...
+     '1985', '1989', '1993', '1997'})
+
 %% 10) Determine the variance of estimation error of solar radio flux
 
 diff = [];
@@ -149,5 +130,5 @@ for i = 1:length(m_flux_mean)
 
 end
 
-var = 1/(length(m_flux_mean_new) - 1) * sum(diff)
-var_raw = 1/(length(m_flux_raw_new) - 1) * sum(diff_raw)
+var = 1/(length(m_flux_mean_new) - 1) * sum(diff); % 24.4274
+var_raw = 1/(length(m_flux_raw_new) - 1) * sum(diff_raw); % 91.1115

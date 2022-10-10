@@ -1,5 +1,7 @@
 function [x, x_hat, z, alpha, sigma_eta2, sigma_w2] = fun(n, var_w, var_eta, incond)
 
+rng default
+
 a_1 = sqrt(var_w);
 a_2 = sqrt(var_eta);
 
@@ -13,7 +15,7 @@ for i = 2:n
 end
 
 for i=1:n
-    z(i) = x(i) + eta(i); % Generate measurements 𝑧𝑖 of the process 𝑋𝑖 
+    z(i) = x(i) + eta(i); % Generate measurements 𝑧𝑖 of the process  𝑋𝑖
 end
 
 % 2) Identify  𝜎𝑤2  and  𝜎𝜂2  using  identification  method

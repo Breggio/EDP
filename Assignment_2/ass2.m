@@ -48,6 +48,14 @@ sigma_eta2_2
 % ylabel('Data', 'FontSize', 30)
 % legend('Trajectory', 'Measuraments', 'FontSize', 30)
 
+%Root Squared Mean Error
+Error_1 = (x_1 - x_hat_1).^2;
+Error_1 = sqrt(sum(Error_1)/length(Error_1))
+
+Error_2 = (x_2 - x_hat_2).^2;
+Error_2 = sqrt(sum(Error_2)/length(Error_2))
+
+%Plots
 figure(1)
 plot(x_1, 'c', 'LineWidth', 1.5)
 hold on
@@ -67,6 +75,7 @@ grid on; grid minor
 xlabel('Steps', 'FontSize', 30)
 ylabel('Data', 'FontSize', 30)
 legend('Trajectory', 'Measuraments', 'Exponentially Smoothed Data', 'Location', 'best','FontSize', 30)
+xlim([0 300])
 
 %% Second Part: Comparison of methodical errors of exponential and running mean. 
 

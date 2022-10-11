@@ -66,8 +66,6 @@ for j = 1:length(alpha)
     var_forw_sum(j) = sum(var_forw(j,:));
 end
 
-
-
 % Deviation indicators for different alpha
 dev_forw = zeros(length(alpha), n);
 dev_forw_sum = [];
@@ -94,7 +92,7 @@ ylabel('Data', 'FontSize', 30)
 % legend('m_sun', '13 smothing','a1', 'a2', 'a3', 'a4', 'a5', 'FontSize', 30)
 
 %% II Part: 3d surface filtration using forward-backward smoothing 
-%% 1) Download surface data
+%% 1-2) Download surface data and Plot noisy and true surface for visualization purposes
 
 tr = load('true_surface.mat');
 no = load('noisy_surface.mat');
@@ -118,13 +116,35 @@ ylabel('X')
 zlabel('Z')
 
 %% 3) Determine the variance of deviation of noisy surface from the true one. 
+% Hint: You may reshape the matrix (difference between the noisy and true surface) 
+% into one array (“reshape command”) and then determine the variance of obtained array. 
 
 var = sum((reshape((true-noise),...
     [1,length(true)*length(true)])).^2)/(length(true)*length(true)-1);
 
-%% 4) 
+%% 4) Apply forward-backward exponential smoothing to filter noisy surface measurements. 
+
 alpha = 0.335;
 
+
+
+
+
+
+
+%% 5) Compare visually the obtained estimation results and true surface. 
+
+
+
+%% 6) Determine the variance of deviation of smoothed surface from the true one. 
+
+%Compare the variance with that from item 3. 
+
+
+
+
+%% 7) Try greater and smaller values of smoothing coefficient 𝛼 and explain 
+% the affect on estimation results
 
 
 

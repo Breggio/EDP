@@ -240,20 +240,23 @@ legend('Trajectory', 'Measurements', 'Running Mean', 'FontSize', 30)
 % for every group window size 𝑀
 
 M_new = 19;
-T_new = ;
+%T_new = 15; % produces inverse oscillations
+%T_new = 19; % leads to the loss of oscillations (zero oscillations)
+T_new = 25; % changes the oscillations insignificantly
 [x_sin, z_4, x_hat_run_4] = t_fun(T_new,sigma_w2, sigma_eta2, a, n_4, M_new);
 
-% % plot
-% figure(5)
-% plot(x_sin, 'r', 'LineWidth', 1.2)
-% hold on
-% plot(z_4, 'k', 'LineWidth', 1.2)
-% plot(x_hat_run(1,:), 'c', 'LineWidth', 1.2)
-% grid on; grid minor
-% xlabel('Steps', 'FontSize', 30)
-% ylabel('Data', 'FontSize', 30)
-% legend('Trajectory', 'Measurements', 'Running Mean 15', 'FontSize', 30)
-% 
+% plot
+figure(5)
+plot(x_sin, 'r', 'LineWidth', 1.2)
+hold on
+plot(z_4, 'k', 'LineWidth', 1.2)
+plot(x_hat_run_4(1,:), 'c', 'LineWidth', 1.2)
+grid on; grid minor
+xlabel('Steps', 'FontSize', 30)
+ylabel('Data', 'FontSize', 30)
+legend('Trajectory', 'Measurements', 'Running Mean 15', 'FontSize', 30)
+% T = 15 produces inverse oscillations
+
 % figure(6)
 % plot(x_sin, 'r', 'LineWidth', 1.2)
 % hold on
@@ -263,53 +266,4 @@ T_new = ;
 % xlabel('Steps', 'FontSize', 30)
 % ylabel('Data', 'FontSize', 30)
 % legend('Trajectory', 'Measurements', 'Running Mean 17', 'FontSize', 30)
-% 
-% figure(7)
-% plot(x_sin, 'r', 'LineWidth', 1.2)
-% hold on
-% plot(z_4, 'k', 'LineWidth', 1.2)
-% plot(x_hat_run(3,:), 'c', 'LineWidth', 1.2)
-% grid on; grid minor
-% xlabel('Steps', 'FontSize', 30)
-% ylabel('Data', 'FontSize', 30)
-% legend('Trajectory', 'Measurements', 'Running Mean 19', 'FontSize', 30)
-% 
-% figure(8)
-% plot(x_sin, 'r', 'LineWidth', 1.2)
-% hold on
-% plot(z_4, 'k', 'LineWidth', 1.2)
-% plot(x_hat_run(4,:), 'c', 'LineWidth', 1.2)
-% grid on; grid minor
-% xlabel('Steps', 'FontSize', 30)
-% ylabel('Data', 'FontSize', 30)
-% legend('Trajectory', 'Measurements', 'Running Mean 21', 'FontSize', 30)
-% 
-% figure(9)
-% plot(x_sin, 'r', 'LineWidth', 1.2)
-% hold on
-% plot(z_4, 'k', 'LineWidth', 1.2)
-% plot(x_hat_run(5,:), 'c', 'LineWidth', 1.2)
-% grid on; grid minor
-% xlabel('Steps', 'FontSize', 30)
-% ylabel('Data', 'FontSize', 30)
-% legend('Trajectory', 'Measurements', 'Running Mean 23', 'FontSize', 30)
-% 
-% figure(10)
-% plot(x_sin, 'r', 'LineWidth', 1.2)
-% hold on
-% plot(z_4, 'k', 'LineWidth', 1.2)
-% plot(x_hat_run(6,:), 'c', 'LineWidth', 1.2)
-% grid on; grid minor
-% xlabel('Steps', 'FontSize', 30)
-% ylabel('Data', 'FontSize', 30)
-% legend('Trajectory', 'Measurements', 'Running Mean 25', 'FontSize', 30)
-% 
-% figure(11)
-% plot(x_sin, 'r', 'LineWidth', 1.2)
-% hold on
-% plot(z_4, 'k', 'LineWidth', 1.2)
-% plot(x_hat_run(7,:), 'c', 'LineWidth', 1.2)
-% grid on; grid minor
-% xlabel('Steps', 'FontSize', 30)
-% ylabel('Data', 'FontSize', 30)
-% legend('Trajectory', 'Measurements', 'Running Mean 27', 'FontSize', 30)
+

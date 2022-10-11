@@ -75,12 +75,17 @@ for i = 2:n
     x_hat(i) = alpha*z(i) + (1-alpha)*x_hat(i-1);
 end
 
-figure(1)
-plot(x, 'c', 'LineWidth', 1.2)
-hold on
-plot(x_hat, 'k', 'LineWidth', 1.2)
-plot(z, 'm', 'LineWidth', 1.2)
-grid on; grid minor
-xlabel('Steps', 'FontSize', 30)
-ylabel('Data', 'FontSize', 30)
-legend('True Data', 'Smoothed Data', 'Measurements', 'FontSize', 30) 
+Error_1 = (x - x_hat).^2;
+Error_1 = sqrt(sum(Error_1)/length(Error_1))
+
+
+
+% figure(1)
+% plot(x, 'c', 'LineWidth', 1.2)
+% hold on
+% plot(x_hat, 'k', 'LineWidth', 1.2)
+% plot(z, 'm', 'LineWidth', 1.2)
+% grid on; grid minor
+% xlabel('Steps', 'FontSize', 30)
+% ylabel('Data', 'FontSize', 30)
+% legend('True Data', 'Smoothed Data', 'Measurements', 'FontSize', 30) 

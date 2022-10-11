@@ -44,13 +44,12 @@ j = (M-1)/2;
 x_hat_run = zeros(n_3,1);
 
 x_hat_run(1:j,1) = sum(z_n(1:j))/3;
-x_hat_run((n_3-j+1):n_3,1) = sum(z_n((n_3-j+1):n_3))/3;
+x_hat_run((n_3-j+1):n_3) = sum(z_n((n_3-j+1):n_3))/3;
 
-for i = j+1:n_3-j-1
+for i = (j+1):(n_3-j)
     x_hat_run(i) = 1/M * (z_n(i-3)+ z_n(i-2) + z_n(i-1) + z_n(i) + ...
-    z_n(i+1) + z_n(i+2) + z_n(i+3));
+    z_n(i+1) + z_n(i+2) + z_n(i+3)); 
 end
-
 
 % Forward Exponential Estimates
 x_hat_forw(1) = incond;
@@ -69,7 +68,7 @@ end
 figure(1)
 hold on
 plot(x_n, 'k', 'LineWidth', 1.2)
-plot(z_n, 'y', 'LineWidth', 1.2)
+plot(z_n, 'g', 'LineWidth', 1.2)
 plot(x_hat_run, 'b', 'LineWidth', 1.2)
 plot(x_hat_back, 'r', 'LineWidth', 1.2)
 grid on; grid minor
@@ -241,8 +240,8 @@ legend('Trajectory', 'Measurements', 'Running Mean', 'FontSize', 30)
 
 M_new = 19;
 %T_new = 15; % produces inverse oscillations
-%T_new = 19; % leads to the loss of oscillations (zero oscillations)
-T_new = 25; % changes the oscillations insignificantly
+T_new = 19; % leads to the loss of oscillations (zero oscillations)
+%T_new = 25; % changes the oscillations insignificantly
 [x_sin, z_4, x_hat_run_4] = t_fun(T_new,sigma_w2, sigma_eta2, a, n_4, M_new);
 
 % plot
@@ -255,15 +254,5 @@ grid on; grid minor
 xlabel('Steps', 'FontSize', 30)
 ylabel('Data', 'FontSize', 30)
 legend('Trajectory', 'Measurements', 'Running Mean 15', 'FontSize', 30)
-% T = 15 produces inverse oscillations
 
-% figure(6)
-% plot(x_sin, 'r', 'LineWidth', 1.2)
-% hold on
-% plot(z_4, 'k', 'LineWidth', 1.2)
-% plot(x_hat_run(2,:), 'c', 'LineWidth', 1.2)
-% grid on; grid minor
-% xlabel('Steps', 'FontSize', 30)
-% ylabel('Data', 'FontSize', 30)
-% legend('Trajectory', 'Measurements', 'Running Mean 17', 'FontSize', 30)
 

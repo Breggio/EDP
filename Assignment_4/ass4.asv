@@ -140,16 +140,10 @@ zlabel('Z','FontSize', 30)
 %% 7) Try greater and smaller values of smoothing coefficient 𝛼 and explain 
 % the affect on estimation results
 
-alpha = [0.2:0.05:0.8];
-var_s = zeros(1, length(alpha));
-
+alpha = [0.2, 0.25, 0.3, 0.];
+var_s = zeros(1, length())
 for i=1:length(alpha)
-    [~, var_s(i)] = forwared_backward(true, noise, alpha(i));
+    [~, var] = forwared_backward(true, noise, alpha(i));
 end
 
-figure(5)
-plot(alpha, var_s, 'ko-','LineWidth', 1.5)
-grid on; grid minor
-xlabel('Alpha', 'FontSize',30)
-ylabel('Variance', 'FontSize',30)
-xlim([0.2 0.8])
+

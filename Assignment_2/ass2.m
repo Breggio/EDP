@@ -64,7 +64,7 @@ plot(x_hat_1, 'm', 'LineWidth', 1)
 grid on; grid minor
 xlabel('Steps', 'FontSize', 30)
 ylabel('Data', 'FontSize', 30)
-legend('Trajectory', 'Measuraments', 'Exponentially Smoothed Data', 'FontSize', 30)
+legend('Trajectory', 'Measuraments', 'Exponentially Smoothed Data', 'FontSize', 25)
 
 figure(2)
 plot(x_2, 'c', 'LineWidth', 1.5)
@@ -74,7 +74,7 @@ plot(x_hat_2, 'm', 'LineWidth', 1)
 grid on; grid minor
 xlabel('Steps', 'FontSize', 30)
 ylabel('Data', 'FontSize', 30)
-legend('Trajectory', 'Measuraments', 'Exponentially Smoothed Data', 'Location', 'best','FontSize', 30)
+legend('Trajectory', 'Measuraments', 'Exponentially Smoothed Data', 'Location', 'best','FontSize', 25)
 xlim([0 300])
 
 %% Second Part: Comparison of methodical errors of exponential and running mean. 
@@ -84,7 +84,7 @@ xlim([0 300])
 % - using equation (2) {z(i)}
 % 3) Determine optimal smoothing coefficient 
 
-n_3 = 300; % size of trajectory
+n_3 = 3000; % size of trajectory
 incond = 10; % initial condition
 x_n(1) = incond;
 
@@ -125,9 +125,9 @@ j = (M-1)/2;
 x_hat_run = zeros(n_3,1);
 
 x_hat_run(1:j,1) = sum(z_n(1:j))/3;
-x_hat_run((n_3-j+1):n_3,1) = sum(z_n((n_3-j+1):n_3))/3;
+x_hat_run((n_3-j+1):n_3) = sum(z_n((n_3-j+1):n_3))/3;
 
-for i = j+1:n_3-j-1
+for i = (j+1):(n_3-j)
     x_hat_run(i) = 1/M * (z_n(i-3)+ z_n(i-2) + z_n(i-1) + z_n(i) + ...
     z_n(i+1) + z_n(i+2) + z_n(i+3)); 
 end
@@ -148,7 +148,7 @@ plot(x_hat_exp, 'm', 'LineWidth', 1.2)
 grid on; grid minor
 xlabel('Steps', 'FontSize', 30)
 ylabel('Data', 'FontSize', 30)
-legend('Trajectory', 'Measuraments', 'Running Mean', 'Exponential Mean', 'FontSize', 30) 
+legend('Trajectory', 'Measuraments', 'Running Mean', 'Exponential Mean', 'FontSize', 25) 
 % xlim([0 300])
 
 figure(4)
@@ -158,7 +158,7 @@ plot(x_hat_run, 'b', 'LineWidth', 1.2)
 grid on; grid minor
 xlabel('Steps', 'FontSize', 30)
 ylabel('Data', 'FontSize', 30)
-legend('Trajectory', 'Running Mean', 'FontSize', 30) 
+legend('Trajectory', 'Running Mean', 'FontSize', 25) 
 
 figure(5)
 plot(x_n, 'k', 'LineWidth', 1.2)
@@ -167,4 +167,4 @@ plot(x_hat_exp, 'r', 'LineWidth', 1.2)
 grid on; grid minor
 xlabel('Steps', 'FontSize', 30)
 ylabel('Data', 'FontSize', 30)
-legend('Trajectory', 'Exponential Mean', 'FontSize', 30) 
+legend('Trajectory', 'Exponential Mean', 'FontSize', 25) 

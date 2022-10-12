@@ -139,14 +139,14 @@ for i = 1:n_3
 end
 
 % Running mean
-M_guess = [25, 50, 100, 150, 200, 250];
+M_guess = [50, 100, 150, 200];
 
 for k = 1:length(M_guess)
       x_hat_run_n(k,:) = movmean(z, M_guess(k));
 end
 
 % Forward mean
-alpha_guess = [0.01, 0.02, 0.075, 0.1, 0.15, 0.2];
+alpha_guess = [0.05, 0.1, 0.15, 0.2];
 x_hat_forw_n = zeros(length(alpha_guess), n_3);
 x_hat_forw_n(:,1) = z(1);
 
@@ -191,24 +191,31 @@ end
 % we are taking into account the highest M (5th line) 
 
 figure(2)
-plot(x, 'r', 'LineWidth', 1.2)
 hold on
+plot(x, 'r', 'LineWidth', 1.2)
 plot(z, 'k', 'LineWidth', 1.2)
-plot(x_hat_run_n(5,:), 'c', 'LineWidth', 1.2)
+plot(x_hat_run_n(1,:), 'LineWidth', 1.2)
+plot(x_hat_run_n(2,:), 'LineWidth', 1.2)
+plot(x_hat_run_n(3,:), 'LineWidth', 1.2)
+plot(x_hat_run_n(4,:), 'LineWidth', 1.2)
 grid on; grid minor
 xlabel('Steps', 'FontSize', 30)
 ylabel('Data', 'FontSize', 30)
-legend('Trajectory', 'Measurements', 'Running Mean', 'FontSize', 30)
+legend('Trajectory', 'Measurements', 'M = 50', 'M = 100', 'M = 150', 'M = 200', 'FontSize', 30)
 
 figure(3)
-plot(x, 'r', 'LineWidth', 1.2)
 hold on
+plot(x, 'r', 'LineWidth', 1.2)
 plot(z, 'k', 'LineWidth', 1.2)
-plot(x_hat_forw_n(1,:), 'c', 'LineWidth', 1.2)
+plot(x_hat_forw_n(1,:), 'LineWidth', 1.2)
+plot(x_hat_forw_n(2,:), 'LineWidth', 1.2)
+plot(x_hat_forw_n(3,:), 'LineWidth', 1.2)
+plot(x_hat_forw_n(4,:), 'LineWidth', 1.2)
 grid on; grid minor
 xlabel('Steps', 'FontSize', 30)
 ylabel('Data', 'FontSize', 30)
-legend('Trajectory', 'Measurements', 'Exponential Mean', 'FontSize', 30)
+legend('Trajectory', 'Measurements', '$\alpha = 0.05$', '$\alpha = 0.1$',...
+    '$\alpha = 0.15$', '$\alpha = 0.2$', 'FontSize', 30)
 
 %% 4) Second trajectory: Generate cyclic trajectory 𝑋𝑖 according to the equation 
 % 5) Generate measurements 𝑧𝑖 of the process 𝑋𝑖  
@@ -241,10 +248,17 @@ legend('Trajectory', 'Measurements', 'Running Mean', 'FontSize', 30)
 % for every group window size 𝑀
 
 M_new = 19;
+<<<<<<< HEAD
 T_new = 15; % produces inverse oscillations
 %T_new = 19; % leads to the loss of oscillations (zero oscillations)
 %T_new = 25; % changes the oscillations insignificantly
 [x_sin, z_4, x_hat_run_4] = t_fun(T_new,sigma_w2, sigma_eta2, a, n_4, M_new);
+=======
+%T_new = 15; % produces inverse oscillations
+%T_new = 19; % leads to the loss of oscillations (zero oscillations)
+T_new = 25; % changes the oscillations insignificantly
+[x_sin, z_4, x_hat_run_4] = t_fun(T_new, sigma_w2, sigma_eta2, a, n_4, M_new);
+>>>>>>> 67a2d57d9ca70bc66d4bcc9708794321c68c0aa1
 
 % plot
 figure(5)
@@ -255,7 +269,7 @@ plot(x_hat_run_4(1,:), 'c', 'LineWidth', 1.2)
 grid on; grid minor
 xlabel('Steps', 'FontSize', 30)
 ylabel('Data', 'FontSize', 30)
-legend('Trajectory', 'Measurements', 'Running Mean 15', 'FontSize', 30)
+legend('Trajectory', 'Measurements', 'Running Mean', 'FontSize', 30)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                                         %

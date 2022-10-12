@@ -1,5 +1,7 @@
 %% Determining and removing drawbacks of exponential and running mean
 
+% Written by Irina Yareshko and Luca Breggion, Skoltech 2022
+
 close all; clear; clc;
 
 set(0,'defaulttextInterpreter','latex');
@@ -90,8 +92,8 @@ for i = 1:n_3
 
 end
 
-dev_ind_back = sum(dev_ind_back)
-dev_ind_run = sum(dev_ind_run)
+dev_ind_back = sum(dev_ind_back);
+dev_ind_run = sum(dev_ind_run);
 
 % Variablility Indicators
 
@@ -105,8 +107,8 @@ for i = 1:(n_3 - 2)
 
 end
 
-var_ind_back = sum(var_ind_back)
-var_ind_run = sum(var_ind_run)
+var_ind_back = sum(var_ind_back);
+var_ind_run = sum(var_ind_run);
 
 %% Part 2. Drawbacks of running mean
 
@@ -239,8 +241,8 @@ legend('Trajectory', 'Measurements', 'Running Mean', 'FontSize', 30)
 % for every group window size 𝑀
 
 M_new = 19;
-%T_new = 15; % produces inverse oscillations
-T_new = 19; % leads to the loss of oscillations (zero oscillations)
+T_new = 15; % produces inverse oscillations
+%T_new = 19; % leads to the loss of oscillations (zero oscillations)
 %T_new = 25; % changes the oscillations insignificantly
 [x_sin, z_4, x_hat_run_4] = t_fun(T_new,sigma_w2, sigma_eta2, a, n_4, M_new);
 
@@ -254,5 +256,37 @@ grid on; grid minor
 xlabel('Steps', 'FontSize', 30)
 ylabel('Data', 'FontSize', 30)
 legend('Trajectory', 'Measurements', 'Running Mean 15', 'FontSize', 30)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                         %
+%                                FUNCTION                                 %
+%                                                                         %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function [x_sin, z_4, x_hat_run_4] = t_fun(T,sigma_w2, sigma_eta2, a, n_4, M_4)
+
+omega = 2*pi/T;
+w = sqrt(sigma_w2).*randn(n_4,1);
+A(1) = a;
+
+for i = 2:n_4
+    A(i) = A(i-1) + w(i);
+end
+
+x_sin = [];
+for i = 1:n_4
+    x_sin(i) = A(i) * sin(omega*i + 3);
+end
+
+eta = sqrt(sigma_eta2).*randn(n_4,1);
+
+z_4 = [];
+for i = 1:n_4
+    z_4(i) = x_sin(i) + eta(i);
+end
+
+x_hat_run_4 = movmean(z_4, M_4);
+
+end
 
 

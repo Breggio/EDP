@@ -87,19 +87,20 @@ plot(m_sun_mean, 'k', 'LineWidth', 1.2)
 % plot(x_back(4,:), 'LineWidth', 1.2)
 plot(x_back(5,:),'m', 'LineWidth', 1.2)
 grid on; grid minor
-xlabel('Steps', 'FontSize', 30)
-ylabel('Data', 'FontSize', 30)
-legend('$m_{sun}$', '$13 \ smothing$', '$alpha = 0.25$', 'FontSize', 30, 'interpreter', 'latex')
+xlabel('Month cycle number', 'FontSize', 30)
+ylabel('Monthly sunspot number', 'FontSize', 30)
+%legend('$m_{sun}$', '$13-month Running mean$', '$FB exponential with \alpha = 0.25$', 'FontSize', 30, 'interpreter', 'latex')
+legend('Measurements', '13-month Running mean', 'FB exponential with $\alpha$ = 0.25', 'FontSize', 30, 'interpreter', 'latex')
 
 %% II Part: 3d surface filtration using forward-backward smoothing 
 %% 1-2) Download surface data and Plot noisy and true surface for visualization purposes
 
 tr = load('true_surface.mat');
 no = load('noisy_surface.mat');
+x = [1:1:length(true)];
 
 true = tr.true_surface;
 noise = no.noisy_surface;
-x = [1:1:length(true)];
 
 figure(2)
 mesh(x,x,true)

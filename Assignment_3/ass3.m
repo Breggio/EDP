@@ -248,17 +248,10 @@ legend('Trajectory', 'Measurements', 'Running Mean', 'FontSize', 30)
 % for every group window size 𝑀
 
 M_new = 19;
-<<<<<<< HEAD
 T_new = 15; % produces inverse oscillations
 %T_new = 19; % leads to the loss of oscillations (zero oscillations)
 %T_new = 25; % changes the oscillations insignificantly
 [x_sin, z_4, x_hat_run_4] = t_fun(T_new,sigma_w2, sigma_eta2, a, n_4, M_new);
-=======
-%T_new = 15; % produces inverse oscillations
-%T_new = 19; % leads to the loss of oscillations (zero oscillations)
-T_new = 25; % changes the oscillations insignificantly
-[x_sin, z_4, x_hat_run_4] = t_fun(T_new, sigma_w2, sigma_eta2, a, n_4, M_new);
->>>>>>> 67a2d57d9ca70bc66d4bcc9708794321c68c0aa1
 
 % plot
 figure(5)
@@ -302,5 +295,4 @@ end
 x_hat_run_4 = movmean(z_4, M_4);
 
 end
-
 

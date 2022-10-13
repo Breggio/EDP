@@ -9,7 +9,7 @@ set(groot,'defaultLegendInterpreter','latex');
 %% I Part: Comparison of the traditional 13-month running mean with the forward-
 %backward exponential smoothing for approximation of 11-year sunspot cycle
 
-%% Download monthly mean sunspot numbe
+%% Download monthly mean sunspot number
 
 data = load('data_group4.mat');
 years = data.data(:,1); % year
@@ -87,9 +87,10 @@ plot(m_sun_mean, 'k', 'LineWidth', 1.2)
 % plot(x_back(4,:), 'LineWidth', 1.2)
 plot(x_back(5,:),'m', 'LineWidth', 1.2)
 grid on; grid minor
-xlabel('Steps', 'FontSize', 30)
-ylabel('Data', 'FontSize', 30)
-legend('$m_{sun}$', '$13 \ smothing$', '$alpha = 0.25$', 'FontSize', 30, 'interpreter', 'latex')
+xlabel('Month cycle number', 'FontSize', 30)
+ylabel('Monthly sunspot number', 'FontSize', 30)
+%legend('$m_{sun}$', '$13-month Running mean$', '$FB exponential with \alpha = 0.25$', 'FontSize', 30, 'interpreter', 'latex')
+legend('Measurements', '13-month Running mean', 'FB exponential with $\alpha$ = 0.25', 'FontSize', 30, 'interpreter', 'latex')
 
 %% II Part: 3d surface filtration using forward-backward smoothing 
 %% 1-2) Download surface data and Plot noisy and true surface for visualization purposes
@@ -121,14 +122,20 @@ zlabel('Z','FontSize', 30)
 
 var = sum((reshape((true-noise),...
     [1,length(true)*length(true)])).^2)/(length(true)*length(true)-1);
+var
+
+% Diff_square_matrix=(noise-true).^2;
+% [row, col] = size(Diff_square_matrix);
+% Diff_square_list=reshape(Diff_square_matrix,[row*col,1]);
+% Deviation_for_noisy = (1/(row*col-1))*sum(Diff_square_list)
 
 %% 4) Apply forward-backward exponential smoothing to filter noisy surface measurements. 
 % 5) Compare visually the obtained estimation results and true surface. 
 % 6) Determine the variance of deviation of smoothed surface from the true one. 
 
-alpha = 0.335;
-[smoothed, var] = forwared_backward(true, noise, alpha);
-var
+alpha = 0.2;
+[smoothed, var_smoothed] = forwared_backward(true, noise, alpha);
+var_smoothed
 
 figure(4)
 mesh(x,x,smoothed)
@@ -140,10 +147,16 @@ zlabel('Z','FontSize', 30)
 %% 7) Try greater and smaller values of smoothing coefficient 𝛼 and explain 
 % the affect on estimation results
 
-alpha = [0.2, 0.25, 0.3, 0.];
-var_s = zeros(1, length())
+alpha = [0.2:0.05:0.8];
+var_s = zeros(1, length(alpha));
+
 for i=1:length(alpha)
-    [~, var] = forwared_backward(true, noise, alpha(i));
+    [~, var_s(i)] = forwared_backward(true, noise, alpha(i));
 end
 
-
+figure(5)
+plot(alpha, var_s, 'ko-','LineWidth', 1.5)
+grid on; grid minor
+xlabel('Alpha', 'FontSize',30)
+ylabel('Variance', 'FontSize',30)
+xlim([0.2 0.8])

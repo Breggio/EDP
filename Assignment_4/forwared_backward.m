@@ -26,7 +26,7 @@ end
 %Step 4. Backwards columns
 
 col_back = zeros(length(true), length(true));
-col_back(end, :) = col_forw(end, :);
+col_back(:, end) = col_forw(:, end);
 
 for i = (length(true) - 1):-1:1
     col_back(:, i) = col_back(:, i + 1) + alpha*(col_forw(:, i) - col_back(:,i + 1));

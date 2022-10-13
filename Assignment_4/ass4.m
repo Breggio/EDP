@@ -9,7 +9,7 @@ set(groot,'defaultLegendInterpreter','latex');
 %% I Part: Comparison of the traditional 13-month running mean with the forward-
 %backward exponential smoothing for approximation of 11-year sunspot cycle
 
-%% Download monthly mean sunspot numbe
+%% Download monthly mean sunspot number
 
 data = load('data_group4.mat');
 years = data.data(:,1); % year
@@ -97,10 +97,10 @@ legend('Measurements', '13-month Running mean', 'FB exponential with $\alpha$ = 
 
 tr = load('true_surface.mat');
 no = load('noisy_surface.mat');
-x = [1:1:length(true)];
 
 true = tr.true_surface;
 noise = no.noisy_surface;
+x = [1:1:length(true)];
 
 figure(2)
 mesh(x,x,true)
@@ -122,14 +122,20 @@ zlabel('Z','FontSize', 30)
 
 var = sum((reshape((true-noise),...
     [1,length(true)*length(true)])).^2)/(length(true)*length(true)-1);
+var
+
+% Diff_square_matrix=(noise-true).^2;
+% [row, col] = size(Diff_square_matrix);
+% Diff_square_list=reshape(Diff_square_matrix,[row*col,1]);
+% Deviation_for_noisy = (1/(row*col-1))*sum(Diff_square_list)
 
 %% 4) Apply forward-backward exponential smoothing to filter noisy surface measurements. 
 % 5) Compare visually the obtained estimation results and true surface. 
 % 6) Determine the variance of deviation of smoothed surface from the true one. 
 
 alpha = 0.335;
-[smoothed, var] = forwared_backward(true, noise, alpha);
-var
+
+[smoothed, var_smoothed] = forwared_backward(true, noise, alpha);
 
 figure(4)
 mesh(x,x,smoothed)

@@ -192,15 +192,18 @@ E_rho_sq = 1/(n-2) *(sum(E_rho_sq_sum))^2;
 
 % A = sigma_w^2
 % B = sigma_eta^2
-syms A B
+% syms A B
+% 
+% eqns = [ A -  E_v_sq + 2*B == 0,...
+%           2*B + 2*A - E_rho_sq == 0  ];
+% vars = [A B];
+% 
+% [a, b] = solve(eqns,vars); 
+% sigma_w2 = double(a);
+% sigma_eta2 = double(b);
 
-eqns = [ A -  E_v_sq + 2*B == 0,...
-          2*B + 2*A - E_rho_sq == 0  ];
-vars = [A B];
+sigma = inv([1 2; 2 2])*[E_v_sq; ];
 
-[a, b] = solve(eqns,vars); 
-sigma_w2 = double(a);
-sigma_eta2 = double(b);
 
 % 3) Determine optimal smoothing coefficient in exponential smoothing 
 

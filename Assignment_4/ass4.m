@@ -1,5 +1,7 @@
 %% Determining and removing drawbacks of exponential and running mean
 
+% Written by Irina Yareshko and Luca Breggion, Skoltech 2022
+
 close all; clear; clc;
 
 set(0,'defaulttextInterpreter','latex');
@@ -40,7 +42,7 @@ end
 % Is there a smoothing constant 𝛼 that provides better results compared to 
 % 13-month running mean according to deviation and variability indicators? 
 
-alpha = [0.01, 0.02, 0.075, 0.1, 0.15, 0.2, 0.25];
+alpha = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3];
 x_forw = zeros(length(alpha), n);
 x_forw(:,1) = m_sun(1);
 
@@ -82,15 +84,15 @@ plot(m_sun, 'c', 'LineWidth', 1.2)
 hold on
 plot(m_sun_mean, 'k', 'LineWidth', 1.2)
 %plot(x_back(1,:), 'LineWidth', 1.2)
-% plot(x_back(2,:), 'LineWidth', 1.2)
-% plot(x_back(3,:), 'LineWidth', 1.2)
-% plot(x_back(4,:), 'LineWidth', 1.2)
-plot(x_back(5,:),'m', 'LineWidth', 1.2)
+%plot(x_back(2,:), 'LineWidth', 1.2)
+%plot(x_back(3,:), 'LineWidth', 1.2)
+plot(x_back(4,:),'m', 'LineWidth', 1.2)
+%plot(x_back(5,:), 'LineWidth', 1.2)
+%plot(x_back(6,:), 'LineWidth', 1.2)
 grid on; grid minor
 xlabel('Month cycle number', 'FontSize', 30)
 ylabel('Monthly sunspot number', 'FontSize', 30)
-%legend('$m_{sun}$', '$13-month Running mean$', '$FB exponential with \alpha = 0.25$', 'FontSize', 30, 'interpreter', 'latex')
-legend('Measurements', '13-month Running mean', 'FB exponential with $\alpha$ = 0.25', 'FontSize', 30, 'interpreter', 'latex')
+legend('Measurements', '13-month Running mean', 'FB exponential with $\alpha$ = 0.2', 'FontSize', 30, 'interpreter', 'latex')
 
 %% II Part: 3d surface filtration using forward-backward smoothing 
 %% 1-2) Download surface data and Plot noisy and true surface for visualization purposes
@@ -122,7 +124,6 @@ zlabel('Z','FontSize', 30)
 
 var = sum((reshape((true-noise),...
     [1,length(true)*length(true)])).^2)/(length(true)*length(true)-1);
-var
 
 % Diff_square_matrix=(noise-true).^2;
 % [row, col] = size(Diff_square_matrix);
@@ -135,7 +136,7 @@ var
 
 alpha = 0.335;
 
-[smoothed, var_smoothed] = forwared_backward(true, noise, alpha);
+[smoothed, var_smoothed] = forward_backward(true, noise, alpha);
 
 figure(4)
 mesh(x,x,smoothed)
@@ -151,7 +152,7 @@ alpha = [0.2:0.05:0.8];
 var_s = zeros(1, length(alpha));
 
 for i=1:length(alpha)
-    [~, var_s(i)] = forwared_backward(true, noise, alpha(i));
+    [~, var_s(i)] = forward_backward(true, noise, alpha(i));
 end
 
 figure(5)
@@ -160,3 +161,49 @@ grid on; grid minor
 xlabel('Alpha', 'FontSize',30)
 ylabel('Variance', 'FontSize',30)
 xlim([0.2 0.8])
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                         %
+%                                FUNCTION                                 %
+%                                                                         %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function [smoothed, var] = forward_backward(true, noise, alpha)
+
+%Step 1. Forward raws
+
+raw_forw = zeros(length(true), length(true));
+raw_forw(1, :) = noise(1, :);
+
+for i = 2:length(true)
+    raw_forw(i, :) = raw_forw(i - 1, :) + alpha*(noise(i, :) - raw_forw(i - 1, :));
+end
+%Step 2. Backward raws
+raw_back = zeros(length(true), length(true));
+raw_back(end, :) = raw_forw(end, :);
+
+for i = (length(true) - 1):-1:1
+    raw_back(i, :) = raw_back(i + 1, :) + alpha*(raw_forw(i, :) - raw_back(i + 1, :));
+end
+%Step 3. Forward columns
+col_forw = zeros(length(true), length(true));
+col_forw(:,1) = raw_back(:,1);
+
+for i = 2:length(true)
+    col_forw(:, i) = col_forw(:,i - 1) + alpha*(raw_back(:, i) - col_forw(:,i - 1));
+end
+
+%Step 4. Backwards columns
+
+col_back = zeros(length(true), length(true));
+col_back(:, end) = col_forw(:, end);
+
+for i = (length(true) - 1):-1:1
+    col_back(:, i) = col_back(:, i + 1) + alpha*(col_forw(:, i) - col_back(:,i + 1));
+end
+
+smoothed = col_back;
+
+var = sum((reshape((true-smoothed),...
+    [1,length(true)*length(true)])).^2)/(length(true)*length(true)-1);
+end

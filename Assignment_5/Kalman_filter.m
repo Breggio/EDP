@@ -1,4 +1,4 @@
-function X_Kalman=Kalman_filter(Z,P,T,m,sigma2_n,sigma2_a)
+function X_Kalman=Kalman_filter(Z, m,sigma2_n,sigma2_a)
 N=length(Z);
 Fi=[1 T; 0 1]; %transition matrix
 G=[T/2;T]; %input matrix
@@ -7,13 +7,13 @@ H=[1 0]; %observation matrix
 %Kalman filter development
 %Creating of arrays
 X=zeros(2,2,N+1); %true data
-P=zeros(2,4,N+1); %filtration error covariance matrix
 K=zeros(2,N);
 X_f=zeros(2,N);
+P=zeros(2,4,N+1); %filtration error covariance matrix
 
 %Initial conditions
 X(:,:,1)=[2,0;0,0]; 
-% P(:,1:2,1)=[10000 0; 0 10000];
+P(:,1:2,1)=[10000 0; 0 10000];
 Q=G*G.'*sigma2_a;
 R=sigma2_n;
 
@@ -37,3 +37,4 @@ X_Kalman(3,1:N-6)=X_f(1,1:N-6); %predictions 7 steps ahead
 X_Kalman(4,1:N)=sqrt(P(1,1,2:N+1)); %error of filtration
 X_Kalman(5,1:N)=sqrt(P(1,3,1:N)); %error of prediction
 X_Kalman(6,1:N)=K(1,:); %filter gain
+end

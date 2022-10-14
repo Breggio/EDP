@@ -1,3 +1,5 @@
+%% Tracking of a moving object which trajectory is disturbed by random acceleration 
+
 close all; clear; clc;
 
 set(0,'defaulttextInterpreter','latex');
@@ -10,24 +12,15 @@ x=zeros(1,200); %true data
 V=zeros(1,200); %velocity
 Z=zeros(1,200); %measurments
 
+sigma2_a=0.2^2;
 sigma2_n=20^2;
-n=randn*sqrt(sigma2_n); %random noise of measurments
-%Initial data
 N=200;
 T=1;
-x(1)=5;
-V(1)=1;
-Z(1)=x(1)+n; %the first measurment
 
-%Generation of data
-for i=2:N
-    sigma2_a=0.2^2;
-    a=randn*sqrt(sigma2_a); %normally distributed random acceleration
-    n=randn*sqrt(sigma2_n); %random noise of measurments
-    V(i)=V(i-1)+a*T;
-    x(i)=x(i-1)+V(i-1)*T+a*T^2/2;
-    Z(i)=x(i)+n;
-end
+Data = traj_meas(N, T, sigma2_a, sigma2_n);
+
+x = Data(1,:);
+Z = Data(2,:);
 
 %% 4) 
 
@@ -66,42 +59,51 @@ end
 
 x_Kalman(1:N)=X(1,1,2:N+1);
 
-%% 5) Building of plots of true trajectory, measurments, filtered esttimates of
-%state vector
+%% 5) Plot results including true trajectory, measurements, filtered estimates 
+% of state vector. 
+
+% Run filter several times to see that estimation results are different 
+% with every new trajectory. 
+ 
 t=1:N; %array of steps
-figure
-plot(t,x,'g',t,Z,'r',t,x_Kalman,'k')
-legend('true data','measurments','filtered estimates of state vector');
-grid on
-xlabel('Step')
-ylabel('Data')
-title('Applying of backward exponential mean')
 
-figure
-%Building of plot of changing filter gain and filtration error
-subplot(2,1,1);
-plot(t,K(1,:));
-legend('K');
-grid on
-xlabel('Step')
-ylabel('Filter gain K, filtration error')
-title('changing of filter gain K');
+figure(1)
+plot(t,x,'g',t,Z,'r',t,x_Kalman,'k', 'LineWidth',1.2)
+legend('True data','Measurments','Filtered Estimates of State Vector');
+grid on; grid minor
+xlabel('Step', 'FontSize', 30)
+ylabel('Data', 'FontSize', 30)
+%Run filter several times to see that estimation results are different with every new trajectory. 
 
-%% 6)
+%% 6) Plot filter gain over the whole filtration interval 
+
+figure(2)
+plot(t,K(1,:),'b' ,'LineWidth', 2);
+legend('Filte Gain K', 'FontSize', 30)
+grid on; grid minor
+xlabel('Step', 'FontSize', 30)
+ylabel('Filter gain K', 'FontSize', 30)
+
+% Plot of square root of its first diagonal element corresponding to 
+% standard deviation of estimation error of coordinate. 
 
 P_sq(1:N)=sqrt(P(1,1,1:N));
-subplot(2,1,2);
-plot(t,P_sq);
-legend('filtrating error');
-grid on
-xlabel('Step')
-ylabel('Filtration error')
-title('changing of filtration error');
 
-%% 7-8-9)
+figure(3)
+plot(t,P_sq, 'c', 'LineWidth', 2);
+grid on; grid minor
+xlabel('Step', 'FontSize', 30)
+ylabel('Filtration error', 'FontSize', 30)
+legend('Filtration error', 'FontSize', 30)
 
-%Estimation of dinamics of mean-sqaured error of estimation over
-%observation interval
+%% 7-8-9) Add to the code extrapolation on m=7 steps ahead on every time step. 
+
+% Estimation of dinamics of mean-sqaured error of estimation over
+% observation interval
+
+% Make M=500 runs of filter and estimate dynamics of mean-squared error 
+% of estimation over observation interval
+
 clear all
 
 %Initial data
@@ -119,15 +121,13 @@ Error_X_f7=zeros(M,N-6); %array of errors of forecasts
 X_Kalman=zeros(6,N,M); %array of filtered data
 x=zeros(2,N);
 
-P(:,1:2,1)=[10000 0; 0 10000];
-
 for i=1:M
-    x=Generation_true_a(N,T,sigma2_n,sigma2_a);
+    x=traj_meas(N,T,sigma2_n,sigma2_a);
     Z=x(2,:);
-    X_Kalman(:,:,i)=Kalman_filter(Z,P,T,m,sigma2_n,sigma2_a); %Kalman filter
-    Error_X(i,:)=(x(1,:)-X_Kalman(1,:,i)).^2; %errors of filtered estimate
-    Error_X_f(i,:)=(x(1,:)-X_Kalman(2,:,i)).^2; %errors of forecasts 1-step
-    Error_X_f7(i,:)=(x(1,7:N)-X_Kalman(3,1:N-6,i)).^2; %errors of forecasts 7-step
+    X_Kalman(:,:,i) = Kalman_filter(Z,T,m,sigma2_n,sigma2_a); %Kalman filter
+    Error_X(i,:) = (x(1,:)-X_Kalman(1,:,i)).^2; %errors of filtered estimate
+    Error_X_f(i,:) = (x(1,:)-X_Kalman(2,:,i)).^2; %errors of forecasts 1-step
+    Error_X_f7(i,:) = (x(1,7:N)-X_Kalman(3,1:N-6,i)).^2; %errors of forecasts 7-step
 end
 
 %Final average value of Error over M runs
@@ -138,24 +138,20 @@ Final_Error_X_f7=sqrt(1/(M-1)*sum(Error_X_f7));
 %Building of plot of final errors of filtered estimate and errors of
 %forecasts
 t=1:N-2;
-figure
-%True error for filtration
-subplot(2,1,1);
-plot(t,Final_Error_X(3:N),t,X_Kalman(4,3:N,1));
-legend('True estimation error','Filtration error covariance matrix');
-grid on
-xlabel('Step')
-ylabel('Errors')
-title('Final error of filtered estimates');
-
-%Prediction error 1-step ahead
-subplot(2,1,2);
+figure(4)
+plot(t,Final_Error_X(3:N),'m', t,X_Kalman(4,3:N,1),'k', 'LineWidth',2);
+legend('True estimation error','Filtration error covariance matrix', 'FontSize',30);
+grid on; grid minor
+xlabel('Step', 'FontSize',30)
+ylabel('Errors','FontSize',30)
+%%
+% Prediction error 1-step ahead
+figure(5)
 plot(t,Final_Error_X_f(3:N),t,X_Kalman(5,3:N,1));
-legend('True error of 1-step forecasts','Prediction error covariance matrix');
 grid on
-xlabel('Step')
-ylabel('Errors')
-title('Final error of 1-step forecasts');
+xlabel('Step', 'FontSize',30)
+ylabel('Errors', 'FontSize',30)
+legend('True error of 1-step forecasts','Prediction error covariance matrix');
 
 %True error for filtration, prediction 1-step ahead and 7-steps ahead
 t1=7:N;
@@ -187,7 +183,7 @@ xlabel('Step')
 ylabel('K')
 title('Filter gain changing');
 
-%% 10) Make 𝑀=500  runs again, but with more accurate initial filtration
+%% 10) Make ������=500  runs again, but with more accurate initial filtration
 % error covariance matrix 
 
 % NEW P(0,0)    

@@ -1,19 +1,25 @@
-function [z,x] = traj_meas(size_, T, sigma2_a, sigma2_n)
+function Data = traj_meas(N, T, sigma2_a, sigma2_n)
 
-x = zeros(1,size_); %true data
-    V = zeros(1,size_); %velocity
-    z = zeros(1,size_); %measurments
-    x(1) = 5; V(1) = 1;
+%Creating of arrays
+X=zeros(1,N); %true data
+V=zeros(1,N); %velocity
+Z=zeros(1,N); %measurments
 
-    measurement_noise = randn*sqrt(sigma2_n);
-    z(1) = x(1) + measurement_noise;
-    for i=2:size_
-        acceleration = randn*sqrt(sigma2_a); %randon noise of true data
-        measurement_noise = randn*sqrt(sigma2_n); %random noise of measurments
-        
-        V(i) = V(i-1) + acceleration*T;
-        x(i) = x(i-1) + V(i-1)*T + 0.5*acceleration*T^2;
-        z(i) = x(i) + measurement_noise;
-    end
+n=randn*sqrt(sigma2_n); %random noise of measurments
+%Initial data
+X(1)=5;
+V(1)=1;
+Z(1)=X(1)+n; %the first measurment
+
+%Generation of data
+for i=2:N
+    a=randn*sqrt(sigma2_a); %normally distributed random acceleration
+    n=randn*sqrt(sigma2_n); %random noise of measurments
+    V(i)=V(i-1)+a*T;
+    X(i)=X(i-1)+V(i-1)*T+a*T^2/2;
+    Z(i)=X(i)+n;
+end
+Data=[X;Z];
+
 end
 

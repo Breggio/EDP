@@ -1,18 +1,16 @@
-function [Z_f, X_forecast, P, K] = KalmanFilter_underestimated(z, m, sigma2_a, X0, P0, K)
-    N = length(z);
-    T = 1; 
-    sigma2_n = 20^2;
-    X = zeros(2, 1, N + 1);  %State vectors of real data
-    P = zeros(2, 2, N + 1);  %Initial filtration error covariance matrix
+function [Z_f, X_forecast, P, K] = KF_und(z, m, sigma2_a, X0, P0, K)
+    
+N = length(z);
+    T = 1;
+    X = zeros(2, 1, N + 1);  % State vectors of real data
+    P = zeros(2, 2, N + 1);  % Initial filtration error covariance matrix
     Fi = [1 T; 0 1];
     G = [0.5*T^2; T];
     H = [1 0]; 
 
-    X(:,:, 1) = X0; %Initian state vector
+    X(:,:, 1) = X0; % Initian state vector
     P(:, :, 1) = P0; 
-    Q = sigma2_a*(G*G'); %Covariance matrix of state noise
-%     CovMatr_MeasNoise = sigma2_n; %Covariance matrix of measurements noise
-
+    Q = sigma2_a*(G*G'); % Covariance matrix of state noise
     Z_f = zeros(1, N);
     X_forecast = zeros(1, N);
     for i = 2:N + 1

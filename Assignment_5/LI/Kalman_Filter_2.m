@@ -1,4 +1,4 @@
-function [Z_f, X_forecast, P, K] = KalmanFilter(z, m, sigma2_a, X0, P0)
+function [Z_f, X_forecast, P, K] = Kalman_Filter_2(z, m, sigma2_a, X0, P0)
     size_ = length(z);
     T = 1; sigma2_n=20^2;
     X = zeros(2, 1, size_ + 1);  %State vectors of real data
@@ -28,6 +28,12 @@ function [Z_f, X_forecast, P, K] = KalmanFilter(z, m, sigma2_a, X0, P0)
         X(:,:,i) = X_pred + K(:,:,i-1)*(z(i-1) - H*X_pred);
         Z_f(i-1) = X(1,1,i);
         P(:, :, i) = (eye(2)-K(:,:,i-1)*H)*P_pred;
+         
+%         Use for the 15th point, where K_understimated is given  
+%         %Filtrarion part    
+%         X(:,:,i) = X_pred + K*(z(i-1) - H*X_pred);
+%         Z_f(i-1) = X(1,1,i);
+%         P(:, :, i) = (eye(2)-K*H)*P_pred;
     end
 end
 

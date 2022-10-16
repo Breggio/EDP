@@ -164,7 +164,7 @@ plot(t,X_Kalman(6,:,1), 'c','LineWidth', 1.2);
 grid on; grid minor
 xlabel('Step', 'FontSize', 30)
 ylabel('K', 'FontSize', 30)
-legend('Filter gain with $P^I$','FontSize', 30, 'interpreter', 'latex');
+legend('Filter gain with $P^I$', 'Filter gain with $P^II$','FontSize', 30, 'interpreter', 'latex');
 
 %% Point 11
 N = 200; 
@@ -175,12 +175,12 @@ sigma2_n = 20^2;
 sigma2_a = 0.2^2;
 m = 7; 
 M = 500;
-err_filt = zeros(M, 1, N);
+Err_filt = zeros(M, 1, N);
 
 for i = 1:M
     [x, z] = data_gen(N, T, sigma2_n, sigma2_a);
     [Z_filt, ~, P_mat] = Kalman_Filter_2(z, m, sigma2_a, X0, P0);
-    err_filt(i,1,:) = (x - Z_filt).^2;
+    Err_filt(i,1,:) = (x - Z_filt).^2;
 end
 
 %% Pont 12
@@ -189,10 +189,10 @@ sigma2_a = 0;
 for i = 1:M
     [x, z] = data_gen(N, T, sigma2_n, sigma2_a);
     [Z_filt, ~, P_matr, K_arr] = Kalman_Filter_2(z, m, sigma2_a, X0, P0);
-    err_filt(i,1,:) = (x - Z_filt).^2;    
+    Err_filt(i,1,:) = (x - Z_filt).^2;    
 end
-fin_err_filt = sqrt( 1/(M-1) * sum(err_filt) );
-sqrt_covm_errf = sqrt(P_matr(1,1,2:N + 1));
+fin_err_filt = sqrt( 1/(M-1) * sum(Err_filt) );
+sqrt_CovMatr_ErrFiltr = sqrt(P_matr(1,1,2:N + 1));
 
 figure(121)
 plot(1:N, x, 'g', 1:N, z, 'm-', 1:N, Z_filt, 'k', 'LineWidth', 1.2)
@@ -209,25 +209,23 @@ xlabel('Step', 'FontSize', 30)
 ylabel('Gain K', 'FontSize', 30)
 
 figure(123)
-plot(3:N, fin_err_filt(1,3:N),'m', 3:N, sqrt_covm_errf(1, 3:200),'k', 'LineWidth', 1.2)
+plot(3:N, fin_err_filt(1,3:N),'m', 3:N, sqrt_CovMatr_ErrFiltr(1, 3:200),'k', 'LineWidth', 1.2)
 grid on; grid minor
 legend('True Estimation Error','Filtration Error Covariance Matrix', 'FontSize', 30)
 xlabel('Step', 'FontSize', 30)
 ylabel('Errors', 'FontSize', 30)
 
 %% Pont 13
-
-err_for = zeros(M, 1, N);
+ErrForecast = zeros(M, 1, N);
 
 for i = 1:M
     [x, z] = data_gen(N, T, sigma2_n, 0.2^2); %0.2^2 = sigma2_a;
-    [Z_filt, X_pred, ~, ~] = Kalman_Filter_2(z, m, 0, X0, P0); %Q = 0;
-    err_filt(i,1,:) = (x - Z_filt).^2;
-    err_for(i,1,:) = (x - X_pred).^2;
+    [Z_filt, X_forecast, ~, ~] = Kalman_Filter_2(z, m, 0, X0, P0); %Q = 0;
+    Err_filt(i,1,:) = (x - Z_filt).^2;
+    ErrForecast(i,1,:) = (x - X_forecast).^2;
 end
-
-fin_err_filt = sqrt( 1/(M-1) * sum(err_filt) );
-fin_err_for = sqrt( 1/(M-1) * sum(err_for) );
+fin_err_filt = sqrt( 1/(M-1) * sum(Err_filt) );
+Final_ErrForecast = sqrt( 1/(M-1) * sum(ErrForecast) );
 
 figure(131)
 plot(1:N, x, 'g', 1:N, z, 'm-', 1:N, Z_filt, 'b', 'LineWidth', 1.2)
@@ -237,21 +235,20 @@ xlabel('Step', 'FontSize', 30)
 ylabel('Data', 'FontSize', 30)
 
 figure(132)
-plot(3:N, fin_err_filt(1,3:N),'m', 3:N, fin_err_for(1,3:N),'k', 'LineWidth', 1.2)
+plot(3:N, fin_err_filt(1,3:N),'m', 3:N, Final_ErrForecast(1,3:N),'k', 'LineWidth', 1.2)
 grid on; grid minor
 legend('Filtered Estimate Error', 'Prediction Estimate Error', 'FontSize', 30)
 xlabel('Step', 'FontSize', 30)
 ylabel('Errors', 'FontSize', 30)
 
 figure(133)
-plot(3:N, fin_err_filt(1,3:N),'m', 3:N, sqrt_covm_errf(1, 3:200),'k', 'LineWidth', 1.2)
+plot(3:N, fin_err_filt(1,3:N),'m', 3:N, sqrt_CovMatr_ErrFiltr(1, 3:200),'k', 'LineWidth', 1.2)
 grid on; grid minor
 legend('True Etimation Error', 'Filtration Error Covariance Matrix', 'FontSize', 30)
 xlabel('Step', 'FontSize', 30)
 ylabel('Errors', 'FontSize', 30)
 
 %% Point 14
-
 sigma2_a = 1;
 [x, z] = data_gen(N, T, sigma2_n, sigma2_a);
 [Z_filt, ~, ~, K_arr] = Kalman_Filter_2(z, m, sigma2_a, X0, P0);
@@ -273,7 +270,7 @@ grid on
 
 sigma2_a = 0.2^2;
 [x, z] = data_gen(N, T, sigma2_n, sigma2_a);
-[Z_filt, X_pred, ~, K_arr] = Kalman_Filter_2(z, m, sigma2_a, X0, P0);
+[Z_filt, X_forecast, ~, K_arr] = Kalman_Filter_2(z, m, sigma2_a, X0, P0);
 
 figure(143)
 plot(1:N, x, 'g', 1:N, z, 'm-', 1:N, Z_filt, 'k', 'LineWidth', 1.2)
@@ -295,10 +292,10 @@ X0 = [100; 5];
 
 for i = 1:M
     [x, z] = data_gen(N, T, sigma2_n, sigma2_a); %sigma2_a = 0.2^2;
-    [Z_filt, X_pred, ~, K_arr] = Kalman_Filter_2(z, m, sigma2_a, X0, P0); %sigma2_a = 0;
-    err_filt(i,1,:) = (x - Z_filt).^2;
+    [Z_filt, X_forecast, ~, K_arr] = Kalman_Filter_2(z, m, sigma2_a, X0, P0); %sigma2_a = 0;
+    Err_filt(i,1,:) = (x - Z_filt).^2;
 end
-Final_ErrFiltered_1 = sqrt( 1/(M-1) * sum(err_filt) );
+Final_ErrFiltered_1 = sqrt( 1/(M-1) * sum(Err_filt) );
 
 figure(151)
 plot(1:N, x, 'g', 1:N, z, 'm-', 1:N, Z_filt, 'b', 'LineWidth', 1.2)
@@ -310,10 +307,10 @@ ylabel('Data', 'FontSize', 30)
 K_underestimated = K_arr(1,N)/5;
 for i = 1:M
     [x, z] = data_gen(N, T, sigma2_n, sigma2_a); %sigma2_a = 0.2^2;
-    [Z_filt, X_pred, ~ ] = KF_und(z, m, sigma2_a, X0, P0, K_underestimated); %sigma2_a = 0;
-    err_filt(i,1,:) = (x - Z_filt).^2;
+    [Z_filt, X_forecast, ~ ] = KF_und(z, m, sigma2_a, X0, P0, K_underestimated); %sigma2_a = 0;
+    Err_filt(i,1,:) = (x - Z_filt).^2;
 end
-Final_ErrFiltered_2 = sqrt( 1/(M-1) * sum(err_filt) );
+Final_ErrFiltered_2 = sqrt( 1/(M-1) * sum(Err_filt) );
 
 figure(152)
 plot(1:N, x, 'g', 1:N, z, 'm-', 1:N, Z_filt, 'k', 'LineWidth', 1.2)
@@ -331,15 +328,3 @@ legend('Filtered Estimate Error (Optimal)',...
     'Filtered Estimate Error (Underestimated)', 'FontSize', 30)
 xlabel('Step', 'FontSize', 30)
 ylabel('Error', 'FontSize', 30)
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                                                                         %
-%                                FUNCTION                                 %
-%                                                                         %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-
-
-

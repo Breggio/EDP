@@ -1,4 +1,4 @@
-function [X, Z, V] = data_gen(N,T,sigma2_n,sigma2_a)
+function [X, Z] = data_gen(N,T,sigma2_n,sigma2_a)
 
 X = zeros(1,N); % true data
 V = zeros(1,N); % velocity
@@ -18,5 +18,4 @@ for i = 2:N
     X(i) = X(i-1) + V(i-1)*T + a*T^2/2;
     Z(i) = X(i) + n;
 end
-
 end

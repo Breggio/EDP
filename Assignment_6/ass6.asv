@@ -29,7 +29,7 @@ for i=1:M
     SqrError_X(i,:) = ( X(3:N) - Z_smoothed(1,4:N+1) ).^2;
     SqrError_V(i,:) = ( V(3:N) - Z_smoothed(2,4:N+1) ).^2;
     SqrError_X_NOTsm(i,:) = ( X(1:N) - Z_f(1,2:N + 1) ).^2;
-    SqrError_V_NOTsm(i,:) = ( V(1:N) - Z_f(2,2:N + 1) ).^2;
+    SqrError_V_NOTsm(i,:) = ( X(1:N) - Z_f(1,2:N + 1) ).^2;
 end
 
 Final_ErrSmoothed_X = sqrt( 1/(M-1) * sum(SqrError_X) ); %true estimation error of coordinate smoothed
@@ -42,9 +42,6 @@ Final_ErrNOTSmoothed_V = sqrt( 1/(M-1) * sum(SqrError_V_NOTsm) ); %true estimati
 SmoothError_X = sqrt(P_smooth(1,1,4:N + 1)); %smoothed error of coordinate
 SmoothError_V = sqrt(P_smooth(2,2,4:N + 1)); %smoothed error of velocity
 
-FilteredError_X = sqrt(P(1,1,4:N + 1)); %filtered error of coordinate
-FilteredError_V = sqrt(P(2,2,4:N + 1)); %filtered error of velocity
-
 t = 1:N;
 figure(1)
 plot(t, X, 'g', t, z, 'm-', t, Z_f(1,2:N + 1), 'k', t, Z_smoothed(1,2:N + 1), 'c', 'LineWidth', 1.2)
@@ -54,23 +51,41 @@ xlabel('Step', 'FontSize', 30);
 ylabel('Data', 'FontSize', 30);
 
 figure(2)
-plot(3:N, Final_ErrSmoothed_X(1,:), 1:N, Final_ErrNOTSmoothed_X(1,:), ...
-3:N, SmoothError_X(1,:), 3:N, FilteredError_X(1,:), 'LineWidth', 1.2)
+plot(3:N, SmoothError_X(1,:), 'm', 3:N, Final_ErrSmoothed_X(1,:), 'k', 'LineWidth', 1.2)
 grid on; grid minor
-legend('True Smoothed Estimation Error', 'True Estimation Error', ...
-    'Smoothing Algorithm Error', 'Filtration Error','FontSize', 20);
+legend('Smoothing Algorithm Error', 'True Estimation Error', 'FontSize', 20);
 xlabel('Step', 'FontSize', 30);
 ylabel('Error', 'FontSize', 30)
-ylim([0 15])
-
 
 figure(3)
-plot(3:N, Final_ErrSmoothed_V(1,:), 1:N, Final_ErrNOTSmoothed_V(1,:), ...
-3:N, SmoothError_V(1,:), 3:N, FilteredError_V(1,:), 'LineWidth', 1.2)
+plot(3:N, SmoothError_V(1,:), 'm', 3:N, Final_ErrSmoothed_V(1,:), 'k', 'LineWidth', 1.2)
 grid on; grid minor
-legend('True Smoothed Estimation Error', 'True Estimation Error', ...
-    'Smoothing Algorithm Error', 'Filtration Error','FontSize', 20);
+legend('Smoothing Algorithm Error', 'True Estimation Error', 'FontSize', 20)
 xlabel('Step', 'FontSize', 30);
-ylabel('Error', 'FontSize', 30);
-ylim([0 2])
+ylabel('Error', 'FontSize', 30)
+
+FilteredError_X = sqrt(P(1,1,4:N + 1)); %filtered error of coordinate
+FilteredError_V = sqrt(P(2,2,4:N + 1)); %filtered error of velocity
+
+figure(4)
+plot(3:N, SmoothError_X(1,:), 'm', 3:N, FilteredError_X(1,:), 'k', 'LineWidth', 1.2)
+grid on; grid minor
+legend('Smoothing Algorithm Error', 'Filtration Error', 'FontSize', 20);
+xlabel('Step', 'FontSize', 30);
+ylabel('Error', 'FontSize', 30)
+
+figure(5)
+plot(3:N, SmoothError_V(1,:), 'm', 3:N, FilteredError_V(1,:), 'k', 'LineWidth', 1.2)
+grid on; grid minor
+legend('Smoothing Algorithm Error', 'Filtration Error', 'FontSize', 20);
+xlabel('Step', 'FontSize', 30);
+ylabel('Error', 'FontSize', 30)
+
+% figure(6)
+% plot(3:N, Final_ErrSmoothed_X(1,:), 1:N, Final_ErrNOTSmoothed_X(1,:), ...
+% 3:N, SmoothError_X(1,:), 'LineWidth', 1.2)
+% grid on; grid minor
+% legend('Smoothing Algorithm Error', 'Filtration Error', 'FontSize', 20);
+% xlabel('Step', 'FontSize', 30);
+% ylabel('Error', 'FontSize', 30)
 

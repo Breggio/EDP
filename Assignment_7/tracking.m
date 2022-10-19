@@ -19,11 +19,12 @@ X_f = zeros(2, N);
 
 % Initial conditions
 X(:,:,1) = [2, 0; 0, 0];
+P(:,1:2,1) = [10000 0; 0 10000];
 Q = G*G.'*sigma2_a; 
 R = sigma2_n;
 m = 7; % steps ahead
 
-for i=2:N
+for i=2:N+1
 
     a = randn*sqrt(sigma2_a); %normally distributed random acceleration
     eta = randn*sqrt(sigma2_n); %random noise of measurments
@@ -36,7 +37,7 @@ for i=2:N
         z(i) = NaN;
         X(:,:,i) = X(:,:,i-1);
         P(:,:,i) = P(:,:,i-1);
-        X_f = phi^m*X(:,1,i);
+        X_f(:,i) = phi^7*X(:,1,i);
     
     elseif csi > Prob
         z(i) = x(i) + eta;
@@ -53,7 +54,7 @@ for i=2:N
                 znew=z ( counter-1); 
                 counter=counter-1;
             end
-        elseif isnan(z(i-1))== 0 
+        elseif isnan(z(i-1)) == 0 
             znew=z(i-1);
         end
         
@@ -63,7 +64,7 @@ for i=2:N
     end
 end
 
-x_Kalman(1:N) = X(1,1,1:N);
+x_Kalman(1:N) = X(1,1,2:N+1);
 
 end
 

@@ -81,31 +81,31 @@ x_Kalman(1:N) = X(1,1,2:N+1);
 
 t = 1:N; %array of steps
 
-figure(1)
-plot(t,x,'c',t,Z,'m',t,x_Kalman,'k', 'LineWidth', 1.2)
-grid on; grid minor
-xlabel('Step', 'FontSize', 30)
-ylabel('Data', 'FontSize', 30)
-legend('True data','Measurments','Filtered Estimates of State Vector','FontSize', 30);
+% figure(1)
+% plot(t,x,'c',t,Z,'m',t,x_Kalman,'k', 'LineWidth', 1.2)
+% grid on; grid minor
+% xlabel('Step', 'FontSize', 30)
+% ylabel('Data', 'FontSize', 30)
+% legend('True data','Measurments','Filtered Estimates of State Vector','FontSize', 30);
 
 %% 6) Filter fain and filtration error
 
-figure(2)
-plot(t, K(1,:),'r', 'LineWidth', 1.2)
-grid on; grid minor
-xlabel('Step', 'FontSize', 30)
-ylabel('Filter Gain K', 'FontSize', 30)
-legend('Filter Gain', 'FontSize', 30)
-ylim([0 1])
+% figure(2)
+% plot(t, K(1,:),'r', 'LineWidth', 1.2)
+% grid on; grid minor
+% xlabel('Step', 'FontSize', 30)
+% ylabel('Filter Gain K', 'FontSize', 30)
+% legend('Filter Gain', 'FontSize', 30)
+% ylim([0 1])
 
 P_sq(1:N)=sqrt(P(1,1,1:N));
 
-figure(3)
-plot(t, P_sq,'r', 'LineWidth', 1.2)
-grid on; grid minor
-xlabel('Step', 'FontSize', 30)
-ylabel('Filtration error', 'FontSize', 30)
-legend('Filtration error', 'FontSize', 30)
+% figure(3)
+% plot(t, P_sq,'r', 'LineWidth', 1.2)
+% grid on; grid minor
+% xlabel('Step', 'FontSize', 30)
+% ylabel('Filtration error', 'FontSize', 30)
+% legend('Filtration error', 'FontSize', 30)
 
 %% 7-8-9 + 10) Estimation of dinamics of mean-sqaured error of estimation over...
 %     observation interval
@@ -145,28 +145,28 @@ Final_Error_X_f7 = sqrt(1/(M-1)*sum(Error_X_f7));
 t=1:(N-2);
 
 %True error for filtration
-figure(4)
-plot(t,Final_Error_X(3:N),'m',t,X_Kalman(4,3:N,1),'k', 'LineWidth', 1.2);
-grid on; grid minor
-xlabel('Step', 'FontSize', 30)
-ylabel('Errors', 'FontSize', 30)
-legend('True Estimation Error','Filtration Error Covariance Matrix', 'FontSize', 30)
+% figure(4)
+% plot(t,Final_Error_X(3:N),'m',t,X_Kalman(4,3:N,1),'k', 'LineWidth', 1.2);
+% grid on; grid minor
+% xlabel('Step', 'FontSize', 30)
+% ylabel('Errors', 'FontSize', 30)
+% legend('True Estimation Error','Filtration Error Covariance Matrix', 'FontSize', 30)
 
-t1 = 7:N;
-figure(6)
-plot(t, Final_Error_X(3:N),'m', t1, Final_Error_X_f7,'k', 'LineWidth', 1.2);
-grid on; grid minor
-xlabel('Step', 'FontSize', 30)
-ylabel('Errors', 'FontSize', 30)
-legend('True estimation error','True error of 7-step prediction', 'FontSize', 30)
+% t1 = 7:N;
+% figure(6)
+% plot(t, Final_Error_X(3:N),'m', t1, Final_Error_X_f7,'k', 'LineWidth', 1.2);
+% grid on; grid minor
+% xlabel('Step', 'FontSize', 30)
+% ylabel('Errors', 'FontSize', 30)
+% legend('True estimation error','True error of 7-step prediction', 'FontSize', 30)
 
 t = 1:N;
-figure(8)
-plot(t,X_Kalman(6,:,1), 'c','LineWidth', 1.2);
-grid on; grid minor
-xlabel('Step', 'FontSize', 30)
-ylabel('K', 'FontSize', 30)
-legend('Filter gain with $P^I$','FontSize', 30, 'interpreter', 'latex');
+% figure(8)
+% plot(t,X_Kalman(6,:,1), 'c','LineWidth', 1.2);
+% grid on; grid minor
+% xlabel('Step', 'FontSize', 30)
+% ylabel('K', 'FontSize', 30)
+% legend('Filter gain with $P^I$','FontSize', 30, 'interpreter', 'latex');
 
 %% Point 11
 N = 200; 
@@ -196,26 +196,26 @@ end
 fin_err_filt = sqrt( 1/(M-1) * sum(err_filt) );
 sqrt_covm_errf = sqrt(P_matr(1,1,2:N + 1));
 
-figure(121)
-plot(1:N, x, 'g', 1:N, z, 'm-', 1:N, Z_filt, 'k', 'LineWidth', 1.2)
-grid on; grid minor
-legend('True Data','Measurements','Filtered Estimates of State Vector', 'FontSize', 30, 'location', 'best')
-xlabel('Step', 'FontSize', 30)
-ylabel('Data', 'FontSize', 30)
-
-figure(122)
-plot(1:N , K_arr(1,:),'g', 'LineWidth', 1.2)
-grid on; grid minor
-legend('Filter Gain', 'FontSize', 30)
-xlabel('Step', 'FontSize', 30)
-ylabel('Gain K', 'FontSize', 30)
-
-figure(123)
-plot(3:N, fin_err_filt(1,3:N),'m', 3:N, sqrt_covm_errf(1, 3:200),'k', 'LineWidth', 1.2)
-grid on; grid minor
-legend('True Estimation Error','Filtration Error Covariance Matrix', 'FontSize', 30)
-xlabel('Step', 'FontSize', 30)
-ylabel('Errors', 'FontSize', 30)
+% figure(121)
+% plot(1:N, x, 'g', 1:N, z, 'm-', 1:N, Z_filt, 'k', 'LineWidth', 1.2)
+% grid on; grid minor
+% legend('True Data','Measurements','Filtered Estimates of State Vector', 'FontSize', 30, 'location', 'best')
+% xlabel('Step', 'FontSize', 30)
+% ylabel('Data', 'FontSize', 30)
+% 
+% figure(122)
+% plot(1:N , K_arr(1,:),'g', 'LineWidth', 1.2)
+% grid on; grid minor
+% legend('Filter Gain', 'FontSize', 30)
+% xlabel('Step', 'FontSize', 30)
+% ylabel('Gain K', 'FontSize', 30)
+% 
+% figure(123)
+% plot(3:N, fin_err_filt(1,3:N),'m', 3:N, sqrt_covm_errf(1, 3:200),'k', 'LineWidth', 1.2)
+% grid on; grid minor
+% legend('True Estimation Error','Filtration Error Covariance Matrix', 'FontSize', 30)
+% xlabel('Step', 'FontSize', 30)
+% ylabel('Errors', 'FontSize', 30)
 
 %% Pont 13
 
@@ -231,26 +231,26 @@ end
 fin_err_filt = sqrt( 1/(M-1) * sum(err_filt) );
 fin_err_for = sqrt( 1/(M-1) * sum(err_for) );
 
-figure(131)
-plot(1:N, x, 'g', 1:N, z, 'm-', 1:N, Z_filt, 'b', 'LineWidth', 1.2)
-grid on; grid minor
-legend('True','Measurements','Filtered Estimates of State Vector', 'FontSize', 30)
-xlabel('Step', 'FontSize', 30)
-ylabel('Data', 'FontSize', 30)
-
-figure(132)
-plot(3:N, fin_err_filt(1,3:N),'m', 3:N, fin_err_for(1,3:N),'k', 'LineWidth', 1.2)
-grid on; grid minor
-legend('Filtered Estimate Error', 'Prediction Estimate Error', 'FontSize', 30)
-xlabel('Step', 'FontSize', 30)
-ylabel('Errors', 'FontSize', 30)
-
-figure(133)
-plot(3:N, fin_err_filt(1,3:N),'m', 3:N, sqrt_covm_errf(1, 3:200),'k', 'LineWidth', 1.2)
-grid on; grid minor
-legend('True Etimation Error', 'Filtration Error Covariance Matrix', 'FontSize', 30)
-xlabel('Step', 'FontSize', 30)
-ylabel('Errors', 'FontSize', 30)
+% figure(131)
+% plot(1:N, x, 'g', 1:N, z, 'm-', 1:N, Z_filt, 'b', 'LineWidth', 1.2)
+% grid on; grid minor
+% legend('True','Measurements','Filtered Estimates of State Vector', 'FontSize', 30)
+% xlabel('Step', 'FontSize', 30)
+% ylabel('Data', 'FontSize', 30)
+% 
+% figure(132)
+% plot(3:N, fin_err_filt(1,3:N),'m', 3:N, fin_err_for(1,3:N),'k', 'LineWidth', 1.2)
+% grid on; grid minor
+% legend('Filtered Estimate Error', 'Prediction Estimate Error', 'FontSize', 30)
+% xlabel('Step', 'FontSize', 30)
+% ylabel('Errors', 'FontSize', 30)
+% 
+% figure(133)
+% plot(3:N, fin_err_filt(1,3:N),'m', 3:N, sqrt_covm_errf(1, 3:200),'k', 'LineWidth', 1.2)
+% grid on; grid minor
+% legend('True Etimation Error', 'Filtration Error Covariance Matrix', 'FontSize', 30)
+% xlabel('Step', 'FontSize', 30)
+% ylabel('Errors', 'FontSize', 30)
 
 %% Point 14
 

@@ -12,11 +12,6 @@ set(groot,'defaultLegendInterpreter','latex');
 
 %% 1-2) Develop Kalman filter to track moving object under conditions of gap 𝑃=0.2
 
-%Creating of arrays
-x = zeros(1, 200); %true data
-V = zeros(1, 200); %velocity
-Z = zeros(1, 200); %measurments
-
 sigma2_a = 0.2^2;
 sigma2_n = 20^2;
 
@@ -133,3 +128,110 @@ xlabel('Step', 'FontSize', 30)
 ylabel('Errors', 'FontSize', 30)
 legend('True estimation error with P = 0.3', 'True estimation error with P = 0.5',...
     'True estimation error with P = 0.7','FontSize', 30)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                         %
+%                                FUNCTION                                 %
+%                                                                         %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function [x, z, x_Kalman] = tracking(N, T, sigma2_a, sigma2_n, Prob)
+
+eta = randn*sqrt(sigma2_n); % Random noise of measurments
+
+x(1) = 5;
+V(1) = 1;
+Z(1) = x(1) + eta; %the first measurment
+
+%State matrixes
+phi = [1 T; 0 1];
+G  = [T/2; T];    % input matrix
+H  = [1 0];       % observation matrix
+
+% Kalman filter 
+X = zeros(2, 2, N + 1); %true data
+P = zeros(2, 4, N + 1); %filtration error covariance matrix
+K = zeros(2, N);
+X_f = zeros(2, N);
+
+% Initial conditions
+X(:,:,1) = [2, 0; 0, 0];
+Q = G*G.'*sigma2_a; 
+R = sigma2_n;
+m = 7; % steps ahead
+
+for i=2:N
+
+    a = randn*sqrt(sigma2_a); %normally distributed random acceleration
+    eta = randn*sqrt(sigma2_n); %random noise of measurments
+    V(i) = V(i - 1) + a*T;
+    x(i) = x(i - 1) + V(i - 1)*T + a*T^2/2;
+
+    csi = rand;
+
+    if csi <= Prob
+        z(i) = NaN;
+        X(:,:,i) = X(:,:,i-1);
+        P(:,:,i) = P(:,:,i-1);
+        X_f = phi^m*X(:,1,i);
+    
+    elseif csi > Prob
+        z(i) = x(i) + eta;
+        X_f(:,i-1) = phi^7*X(:,1,i-1);
+        X(:,2,i-1) = phi*X(:,1,i-1);
+        P(:,3:4,i-1) = phi*P(:,1:2,i-1)*phi.'+Q;
+        K(:,i-1) = P(:,3:4,i-1)*H.'*(H*P(:,3:4,i-1)*H.'+R) ^(-1);
+
+        if isnan(z(i-1)) == 1 
+            counter=i ;
+            znew=z(i-1);
+            
+            while isnan(znew) == 1 
+                znew=z ( counter-1); 
+                counter=counter-1;
+            end
+        elseif isnan(z(i-1))== 0 
+            znew=z(i-1);
+        end
+        
+        X(:,1,i) = X(:,2,i-1)+K(:,i-1)*(znew-H*X(:,2, i-1) ) ;
+        P(:,1:2,i) = (eye(2)-K(:,i-1)*H)*P(:,3:4,i-1);
+
+    end
+end
+
+x_Kalman(1:N) = X(1,1,1:N);
+
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                         %
+%                                FUNCTION                                 %
+%                                                                         %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function [Final_Error_X, Final_Error_X_f, Final_Error_X_f7] = errors(m, M, N,sigma2_n, sigma2_a, T, x)
+
+% Initialization
+Error_X    = zeros(M, N);      % array of errors of filtered estimate
+Error_X_f  = zeros(M, N);      % array of errors of forecasts
+Error_X_f7 = zeros(M, N - 6);  % array of errors of forecasts
+X_Kalman   = zeros(6, N, M);   % array of filtered data
+%x          = zeros(2, N);
+
+for i = 1:M
+    [x, Z] = data_gen(N,T,sigma2_n,sigma2_a);
+    X_Kalman(:,:,i) = Kalman_filter(Z,T,m,sigma2_n,sigma2_a); % Kalman filter
+    Error_X(i,:)    = (x(1,:) - X_Kalman(1,:,i)).^2; % errors of filtered estimate
+    Error_X_f(i,:)  = (x(1,:) - X_Kalman(2,:,i)).^2; % errors of forecasts 1-step
+    Error_X_f7(i,:) = (x(1,7:N) - X_Kalman(3,1:N-6,i)).^2; % errors of forecasts 7-step
+end
+
+%Final average value of Error over M runs
+Final_Error_X    = sqrt(1/(M-1)*sum(Error_X));
+Final_Error_X_f  = sqrt(1/(M-1)*sum(Error_X_f));
+Final_Error_X_f7 = sqrt(1/(M-1)*sum(Error_X_f7));
+
+end
+
+
+

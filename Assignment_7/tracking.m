@@ -4,7 +4,7 @@ eta = randn*sqrt(sigma2_n); % Random noise of measurments
 
 x(1) = 5;
 V(1) = 1;
-Z(1) = x(1) + eta; %the first measurment
+z(1) = x(1) + eta; %the first measurment
 
 %State matrixes
 phi = [1 T; 0 1];

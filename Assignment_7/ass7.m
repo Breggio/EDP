@@ -71,7 +71,6 @@ P3 = 0.7;
 [x3, z3, x_Kalman3] = tracking(N, T, sigma2_a, sigma2_n, P3);
 
 % Errors
-
 [Final_Error_X1, Final_Error_X_f1, Final_Error_X_f71] = errors(m, M, N,sigma2_n, sigma2_a, T, x1);
 [Final_Error_X2, Final_Error_X_f2, Final_Error_X_f72] = errors(m, M, N,sigma2_n, sigma2_a, T, x2);
 [Final_Error_X3, Final_Error_X_f3, Final_Error_X_f73] = errors(m, M, N,sigma2_n, sigma2_a, T, x3);

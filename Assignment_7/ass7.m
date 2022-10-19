@@ -66,7 +66,6 @@ P3 = 0.7;
 [x3, z3, x_Kalman3] = tracking(N, T, sigma2_a, sigma2_n, P3);
 
 % Errors
-
 [Final_Error_X1, Final_Error_X_f1, Final_Error_X_f71] = errors(m, M, N,sigma2_n, sigma2_a, T, x1);
 [Final_Error_X2, Final_Error_X_f2, Final_Error_X_f72] = errors(m, M, N,sigma2_n, sigma2_a, T, x2);
 [Final_Error_X3, Final_Error_X_f3, Final_Error_X_f73] = errors(m, M, N,sigma2_n, sigma2_a, T, x3);
@@ -118,11 +117,8 @@ ylabel('Errors', 'FontSize', 30)
 legend('True estimation error','True error of 1-step prediction with P=0.7', ...
     'True error of 7-step prediction with P=0.7', 'FontSize', 30)
 
-%% TBD
-
-% maybe, idk if it is correct to compare the true estimation error
 figure(9)
-plot(t, Final_Error_X1(1:N), t, Final_Error_X2(1:N), t, Final_Error_X3(1:N), 'LineWidth',1.5)
+plot(t, Final_Error_X1(1:N),'m', t, Final_Error_X2(1:N),'c', t, Final_Error_X3(1:N),'k', 'LineWidth',1.5)
 grid on; grid minor
 xlabel('Step', 'FontSize', 30)
 ylabel('Errors', 'FontSize', 30)

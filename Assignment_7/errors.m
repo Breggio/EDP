@@ -21,4 +21,3 @@ Final_Error_X_f  = sqrt(1/(M-1)*sum(Error_X_f));
 Final_Error_X_f7 = sqrt(1/(M-1)*sum(Error_X_f7));
 
 end
-

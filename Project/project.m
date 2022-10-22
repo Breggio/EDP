@@ -48,7 +48,7 @@ d = [z1(:,1), z2(:,1), z3(:,1)];
 beta = [z1(:,2), z2(:,2), z3(:,2)];
 
 for i = 1:N
-    a=randn;
+    a=0;
     d_m_1(i) = d(i,1) + a*sigma_d;
     b_m_1(i) = beta(i,1) + a*sigma_beta;
     d_m_2(i) = d(i,2) +a*sigma_d;
@@ -170,6 +170,7 @@ T = 1;
 [z3_filtered_raw, FiltrErr_CovMatr, ForecErr_CovMatr] = Kalman_v2(z3, T, sigma_a, sigma_n, P0, Z0);
 [z3_smoothed_raw, ] = Kalman_BackSmooth(z3_filtered_raw, ForecErr_CovMatr, FiltrErr_CovMatr, T);
 
+temp = FiltrErr_CovMatr(1,1,1:200);
 P0 = FiltrErr_CovMatr(:,:,499);
 [z1_filtered, FiltrErr_CovMatr, ForecErr_CovMatr] = Kalman_v2(z1, T, sigma_a, sigma_n, P0, Z0);
 [z1_smoothed, ] = Kalman_BackSmooth(z1_filtered, ForecErr_CovMatr, FiltrErr_CovMatr, T);
@@ -179,8 +180,8 @@ P0 = FiltrErr_CovMatr(:,:,499);
 
 [z3_filtered, FiltrErr_CovMatr, ForecErr_CovMatr] = Kalman_v2(z3, T, sigma_a, sigma_n, P0, Z0);
 [z3_smoothed, ] = Kalman_BackSmooth(z3_filtered, ForecErr_CovMatr, FiltrErr_CovMatr, T);
+temp2 = FiltrErr_CovMatr(1,1,1:200);
 
-temp = FiltrErr_CovMatr(1,1,1:200);
 
 figure()
 plot(z1(1,:), z1(2,:), 'm*',z2(1,:), z2(2,:),'c*', z3(1,:), z3(2,:),'k*')
@@ -253,10 +254,10 @@ ylabel('Y [m]')
 %%
 
 figure(3)
-temp2 = FiltrErr_CovMatr(1,1,1:200);
+
 plot(1:200, temp(1,:), 1:200, temp2(1,:))
-legend('1st run. Non-tuned initial P_0', '2nd run. Tuned initial P_0')
-%title('Comparing filter error covarience matrixes')
+legend('Non-tuned initial $P_0$', 'Tuned initial $P_0$', 'interpreter', 'latex')
+title('Comparing filter error covarience matrixes')
 xlabel('Observation interval')
 ylabel('Error SD')
 grid on; grid minor
@@ -291,4 +292,21 @@ plot(z1_smoothed(1,:), z1_smoothed(3,:), 'red',...
 legend('Vehicle 1','Vehicle 2','Vehicle 3')
 title('Corrected trajectory')
 xlabel('x'), ylabel('y')
+grid on
+
+
+
+figure(7)
+plot(z1(1,:), z1(2,:), 'k*',z2(1,:), z2(2,:),'c*', z3(1,:), z3(2,:),'m*')
+hold on
+plot(z1_smoothed(1,:), z1_smoothed(3,:), 'red',...
+     z2_smoothed(1,:), z2_smoothed(3,:), 'blue',...
+     z3_smoothed(1,:), z3_smoothed(3,:), 'green',...
+     z1_smoothed(1,1), z1_smoothed(3,1), 'redo',...
+     z2_smoothed(1,1), z2_smoothed(3,1), 'blueo',...
+     z3_smoothed(1,1), z3_smoothed(3,1), 'greeno')
+grid on; grid minor
+legend('Vehicle 1','Vehicle 2','Vehicle 3')
+title('Corrected trajectory')
+xlabel('X'), ylabel('Y')
 grid on

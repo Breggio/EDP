@@ -3,9 +3,11 @@ function [Z_filtered, FiltrErr_CovMatr, ForecErr_CovMatr] = Kalman_v2(Z, T, sigm
     TransMatr = [1 T 0 0; 0 1 0 0; 0 0 1 T; 0 0 0 1];
     ObservMatr = [1 0 0 0; 0 0 1 0];
     InputMatr = [0.5*T^2 0; T 0; 0 0.5*T^2; 0 T];
-    
+    sigma_d = 200^2;
+    sigma_beta = 0.01^2;
     CovMatr_StateNoise = (InputMatr*InputMatr.')*sigma_a^2;
-    CovMatr_MeasNoise = sigma_n^2;
+    CovMatr_MeasNoise = [40000 0; 0 0.01^2];
+
     
     Z_filtered = zeros(4, size_ + 1);           %Filtered data
     Z_forecast = zeros(4, size_);               %Forecast data
@@ -22,7 +24,7 @@ function [Z_filtered, FiltrErr_CovMatr, ForecErr_CovMatr] = Kalman_v2(Z, T, sigm
             TransMatr*FiltrErr_CovMatr(:,:,i - 1)*TransMatr.' + CovMatr_StateNoise;
         %Filtrarion part    
         K(:,:,i-1) = ForecErr_CovMatr(:,:,i-1)*(ObservMatr.') * ...
-            (ObservMatr*ForecErr_CovMatr(:,:,i-1)*ObservMatr.' + CovMatr_MeasNoise*eye(2))^(-1);
+            (ObservMatr*ForecErr_CovMatr(:,:,i-1)*ObservMatr.' + CovMatr_MeasNoise)^(-1);
         FiltrErr_CovMatr(:, :, i) = ...
             (eye(4)-K(:,:,i-1)*ObservMatr)*ForecErr_CovMatr(:,:,i-1);
         Z_filtered(:,i) = Z_forecast(:,i-1) + ...

@@ -55,8 +55,7 @@ err_azimut_pred = sqrt(1/(M-1)*sum(err_azimut_pred));
 % True trajectory, measurements and filtered&extrapolated
 figure(1)
 polarplot(polar(2,:),polar(1,:), 'm',...
-    z_p(2,:),z_p(1,:),'c.',...
-    azimuth_fe(1,:), range_fe(1,:), 'k')
+    z_p(2,:),z_p(1,:),'c.')
 legend('True trajectory', 'Measurements', 'Filtered', 'FontSize', 30)
 grid on; grid minor
 
@@ -64,9 +63,8 @@ grid on; grid minor
 
 figure(2)
 plot(4:N,err_range_filt(4:N),'m',...
-     4:N,err_range_pred(4:N),'c',...
-     1:N,sigma_D*ones(1,N), 'black');
-legend('Filtration error','Extrapolation error','$\sigma_D$','interpreter', 'latex');
+     4:N,err_range_pred(4:N),'c');
+legend('Filtration error','Extrapolation error');
 %title('Errors of range');
 xlabel('Step')
 ylabel('Errors')
@@ -76,9 +74,8 @@ grid on; grid minor
 
 figure(3)
 plot(4:N,err_azimut_filt(4:N),'m', ...
-     4:N,err_azimut_pred(4:N),'c',...
-     1:N,sigma_b*ones(1,N), 'black');
-legend('Filtration error','Extrapolation error','$\sigma_\beta$', 'interpreter', 'latex');
+     4:N,err_azimut_pred(4:N),'c');
+legend('Filtration error','Extrapolation error');
 %title('Errors of azimiuth');
 xlabel('Step')
 ylabel('Errors')
@@ -93,14 +90,17 @@ plot(cart(1,:),cart(3,:), 'm',...
 legend('True', 'Filtered')
 grid on; grid minor
 xlabel('Step')
-ylabel('Errors')
+ylabel('Data')
 
 %% Point 8
+A = NaN;
+b = z_p(1,:);
+b(isnan(A))=0;
 
 figure(7)
 plot(1:N, polar(1,:),'m',  1:N, z_p(1,:), 'c',1:N ,range_fe(1,:), 'k')
 %title('Range')
-legend('True', 'Measurements', 'Filtered')
+legend('True', 'Measurements', 'Filtered', 'location', 'best','FontSize', 25)
 grid on; grid minor
 xlabel('Step')
 ylabel('Data')

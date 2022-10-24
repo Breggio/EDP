@@ -9,7 +9,7 @@ set(groot,'defaultAxesTickLabelInterpreter','latex');
 set(groot,'defaultLegendInterpreter','latex');
 
 T=1; N=500;
-InititalState = [3000;-10;3000;-10]; %[x0; Vx0; y0; Vy0]
+InititalState = [1000;10;1000;10]; %[x0; Vx0; y0; Vy0]
 sigma_a = 0.3;      %Variance of acceleration noise
 sigma_D = 50;       %variance of range noise of measurements
 sigma_b = 0.004;    %variance of azimuth noise of measurements
@@ -57,16 +57,26 @@ Final_CN=sum(Condition_nums)/M;
 Final_K_matr=sum(K_matr_values)/M;
 
 figure(1)
-polarplot(TruePolar(2,:),TruePolar(1,:), 'b', Z_p(2,:),Z_p(1,:),'r.', 'LineWidth', 1.2);
-legend('True motion', 'Measurements', 'FontSize', 20);
+polarplot(TruePolar(2,:),TruePolar(1,:), 'b', 'LineWidth', 1.2);
+legend('True motion', 'FontSize', 20);
 grid on; grid minor;
 
 figure(2)
-polarplot(azimuth_fe(1,:), range_fe(1,:), 'c', 'LineWidth', 1.2);
-legend('Filtered', 'FontSize', 20);
+polarplot(Z_p(2,:),Z_p(1,:),'r.', 'LineWidth', 1.2);
+legend('Measurements', 'FontSize', 20);
 grid on; grid minor;
 
 figure(3)
+polarplot(azimuth_fe(1,:), range_fe(1,:), 'c', 'LineWidth', 1.2);
+legend('Filtered Estimate', 'FontSize', 20);
+grid on; grid minor;
+
+figure(4)
+polarplot(azimuth_fe(2,:), range_fe(2,:), 'b', 'LineWidth', 1.2);
+legend('Extrapolated Estimate', 'FontSize', 20);
+grid on; grid minor;
+
+figure(5)
 plot(3:N,FinalErr_range_filtered(3:N),...
      3:N,FinalErr_range_forecast(3:N),...
      3:N,sigma_D*ones(1,N-2), 'black', 'LineWidth', 1.2);
@@ -76,7 +86,7 @@ xlabel('Step', 'FontSize', 20)
 ylabel('Errors', 'FontSize', 20)
 grid on; grid minor;
 
-figure(4)
+figure(6)
 plot(3:N,FinalErr_azimut_filtered(3:N), ...
      3:N,FinalErr_azimut_forecast(3:N), ...
      3:N,sigma_b*ones(1,N-2), 'black', 'LineWidth', 1.2);

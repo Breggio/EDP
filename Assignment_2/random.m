@@ -28,9 +28,9 @@ for i = 2:n
     end
 end
 
-E_v_sq = (1/(n-1)) *sum(v_i.^2);
+E_v_sq = (1/(n-1)) *sum(v_i(1:n).^2);
 
-E_rho_sq = (1/(n-2)) *sum(rho_i.^2);
+E_rho_sq = (1/(n-2)) *sum(rho_i(1:n).^2);
 
 sigma = inv([1 2; 2 2])*[E_v_sq; E_rho_sq];
 sigma_w2 = sigma(1);
@@ -43,11 +43,10 @@ alpha = (-csi + sqrt(csi^2 + 4*csi))/2; % correct bc should be between 0,1
 
 % 4) Perform exponential smoothing with the determined smoothing coefficient
 
-x_hat(1) = 10;
+x_hat(1) = z(1);
 
 for i = 2:n
-    x_hat(i) = alpha*z(i) + (1-alpha)*x_hat(i-1);
+    x_hat(i) = x_hat(i-1) + alpha * (z(i) - x_hat(i-1));
 end
 
 end
-

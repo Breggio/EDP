@@ -1,3 +1,5 @@
+%% Extended Kalman filter for navigation and tracking 
+
 % Written by Irina Yareshko and Luca Breggion, Skoltech 2022
 
 close all 
@@ -7,6 +9,8 @@ clc
 set(0,'defaulttextInterpreter','latex');
 set(groot,'defaultAxesTickLabelInterpreter','latex');
 set(groot,'defaultLegendInterpreter','latex');
+
+%%
 
 T=1; N=500;
 InititalState = [1000;10;1000;10]; %[x0; Vx0; y0; Vy0]
@@ -105,7 +109,7 @@ grid on; grid minor;
 
 function [True_polar,True_Cartesian,Z_c,Z_p] = ...
     Generation_true_determ(size_,T,sigma_D,sigma_b, InititalState, sigma_a)
-%% Generation of true trajectory
+% Generation of true trajectory
     X   = zeros(1,size_); X(1)   = InititalState(1);
     Y   = zeros(1,size_); Y(1)   = InititalState(3);
     V_x = zeros(1,size_); V_x(1) = InititalState(2);
@@ -143,12 +147,6 @@ function [True_polar,True_Cartesian,Z_c,Z_p] = ...
         Z_c(:,i)=[x_m(i);y_m(i)];
     end
 end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                                                                         %
-%                                FUNCTION                                 %
-%                                                                         %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [Z_filtered, P, P_pred, range_fe, azimuth_fe, CondMatr, K] ...
     = Kalman(Z_cart, Z_polar, T, sigma_D,sigma_b, sigma_a)
@@ -203,4 +201,3 @@ function [Z_filtered, P, P_pred, range_fe, azimuth_fe, CondMatr, K] ...
         end
     end
 end
-

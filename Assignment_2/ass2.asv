@@ -1,6 +1,8 @@
 %% Comparison of the exponential and running mean for random walk model
 
-close all; clear; clc;
+close all
+clear 
+clc
 
 set(0,'defaulttextInterpreter','latex');
 set(groot,'defaultAxesTickLabelInterpreter','latex');
@@ -18,19 +20,38 @@ incond = 10;
 
 rng default
 
-[x_1, x_hat_1, z_1, alpha_1, sigma_eta2_1, sigma_w2_1] = fun(n_1, sigma_w2, sigma_eta2, incond);
-[x_2, x_hat_2, z_2, alpha_2, sigma_eta2_2, sigma_w2_2] = fun(n_2, sigma_w2, sigma_eta2, incond);
+[x_1, x_hat_1, z_1, alpha_1, sigma_eta2_1, sigma_w2_1, sigma_1] = fun(n_1, sigma_w2, sigma_eta2, incond);
+[x_2, x_hat_2, z_2, alpha_2, sigma_eta2_2, sigma_w2_2, sigma_2] = fun(n_2, sigma_w2, sigma_eta2, incond);
 
+n = 100:100:100000;
+sigma = [];
 
+for i = n
+    [x_1, x_hat_1, z_1, alpha_1, sigma_eta2_1, sigma_w2_1, sigma_1] = fun(i, sigma_w2, sigma_eta2, incond);
+    j = find(n==i);
+    sigma(:,j) = sigma_1;
+end
+%%
+
+figure()
+plot(n, sigma(1,:), 'LineWidth',1.2) %sigma_w
+hold on
+plot(n, sigma(2,:), 'LineWidth',1.2) %sigma_eta
+plot(n, sigma_w2.*ones(length(n),1),'k', 'LineWidth',1.2)
+plot(n, sigma_eta2.*ones(length(n),1),'k', 'LineWidth',1.2)
+grid on; grid minor
+legend('$\sigma_w$','$\sigma_{eta}$','$\sigma_w = 12$','$\sigma_{eta} = 9$', 'interpreter', 'latex')
+
+%%
 % increasing the number of steps, we are getting closer to the real (given) 
 % sigma and eta
 
 %Root Squared Mean Error
 Error_1 = (z_1 - x_hat_1).^2;
-Error_1 = sqrt(sum(Error_1)/length(Error_1))
+Error_1 = sqrt(sum(Error_1)/length(Error_1));
 
 Error_2 = (z_2 - x_hat_2).^2;
-Error_2 = sqrt(sum(Error_2)/length(Error_2))
+Error_2 = sqrt(sum(Error_2)/length(Error_2));
 
 %Plots
 figure(1)
@@ -147,74 +168,62 @@ ylabel('Data', 'FontSize', 30)
 legend('Trajectory', 'Exponential Mean', 'FontSize', 25) 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                                                                         %
-%                                FUNCTION                                 %
-%                                                                         %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-function [x, x_hat, z, alpha, sigma_eta2, sigma_w2] = fun(n, var_w, var_eta, incond)
-
-rng default
-
-a_1 = sqrt(var_w);
-a_2 = sqrt(var_eta);
-
-w = a_1.*randn(n,1);
-eta = a_2.*randn(n,1);
-
-x(1) = incond;
-
-for i = 2:n
-    x(i) = x(i-1) + w(i); % generated trajectory RWM
-end
-
-for i=1:n
-    z(i) = x(i) + eta(i); % Generate measurements 𝑧𝑖 of the process  𝑋𝑖
-end
-
-% 2) Identify  𝜎𝑤2  and  𝜎𝜂2  using  identification  method
-
-E_v_sq_sum = [];
-for i = 2:n
-    E_v_sq_sum(i-1) = ( w(i) + eta(i) - eta(i-1) );
-end
-
-E_v_sq = 1/(n-1) *(sum(E_v_sq_sum))^2;
-
-E_rho_sq_sum = [];
-for i=3:n
-     E_rho_sq_sum(i-2) = ( w(i) + w(i-1) + eta(i) - eta(i-2));
-end
-
-E_rho_sq = 1/(n-2) *(sum(E_rho_sq_sum))^2;
-
-% A = sigma_w^2
-% B = sigma_eta^2
-% syms A B
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %                                                                         %
+% %                                FUNCTION                                 %
+% %                                                                         %
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 
-% eqns = [ A -  E_v_sq + 2*B == 0,...
-%           2*B + 2*A - E_rho_sq == 0  ];
-% vars = [A B];
 % 
-% [a, b] = solve(eqns,vars); 
-% sigma_w2 = double(a);
-% sigma_eta2 = double(b);
-
-sigma = inv([1 2; 2 2])*[E_v_sq; ];
-
-
-% 3) Determine optimal smoothing coefficient in exponential smoothing 
-
-csi = sigma_w2/sigma_eta2; 
-alpha = (-csi + sqrt(csi^2 + 4*csi))/2; % correct bc should be between 0,1
-
-% 4) Perform exponential smoothing with the determined smoothing coefficient
-
-x_hat(1) = 10;
-
-for i = 2:n
-    x_hat(i) = alpha*z(i) + (1-alpha)*x_hat(i-1);
-end
-end
+% function [x, x_hat, z, alpha, sigma_eta2, sigma_w2, sigma] = fun(n, var_w, var_eta, incond)
+% %[x, x_hat, z, alpha, sigma_eta2, sigma_w2] = fun(n, var_w, var_eta, incond)
+% 
+% rng default
+% 
+% a_1 = sqrt(var_w);
+% a_2 = sqrt(var_eta);
+% 
+% w = a_1.*randn(n,1);
+% eta = a_2.*randn(n,1);
+% 
+% x(1) = incond;
+% v_i = [];
+% rho_i = [];
+% 
+% for i = 2:n
+%     x(i) = x(i-1) + w(i); % generated trajectory RWM
+% end
+% 
+% for i=1:n
+%     z(i) = x(i) + eta(i); % Generate measurements 𝑧𝑖 of the process  𝑋𝑖
+% end
+% 
+% for i = 2:n
+%     v_i(i) = z(i) - z(i-1);
+%     if i > 2
+%         rho_i(i) = z(i) - z(i-2);
+%     end
+% end
+% 
+% E_v_sq = (1/(n-1)) *sum(v_i(1:n).^2);
+% 
+% E_rho_sq = (1/(n-2)) *sum(rho_i(1:n).^2);
+% 
+% sigma = inv([1 2; 2 2])*[E_v_sq; E_rho_sq];
+% sigma_w2 = sigma(1);
+% sigma_eta2 = sigma(2);
+% 
+% %3) Determine optimal smoothing coefficient in exponential smoothing 
+% 
+% csi = sigma_w2/sigma_eta2; 
+% alpha = (-csi + sqrt(csi^2 + 4*csi))/2; % correct bc should be between 0,1
+% 
+% % 4) Perform exponential smoothing with the determined smoothing coefficient
+% 
+% x_hat(1) = z(1);
+% 
+% for i = 2:n
+%     x_hat(i) = x_hat(i-1) + alpha * (z(i) - x_hat(i-1));
+% end
+% 
+% end

@@ -4,9 +4,11 @@ function [x, z, sigma] = random(n, var_w, var_eta, incond)
 rng default
 
 a_1 = sqrt(var_w);
+w = a_1.*randn(n,1);
+
 a_2 = sqrt(var_eta);
 
-w = a_1.*randn(n,1);
+
 eta = a_2.*randn(n,1);
 
 x(1) = incond;

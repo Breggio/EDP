@@ -139,14 +139,14 @@ for i = 1:n_3
 end
 
 % Running mean
-M_guess = [50, 100, 150, 200];
+M_guess = [10, 20, 30, 40, 50];
 
 for k = 1:length(M_guess)
       x_hat_run_n(k,:) = movmean(z, M_guess(k));
 end
 
 % Forward mean
-alpha_guess = [0.05, 0.1, 0.15, 0.2];
+alpha_guess = [0.05, 0.1, 0.15, 0.2, 0.25];
 x_hat_forw_n = zeros(length(alpha_guess), n_3);
 x_hat_forw_n(:,1) = z(1);
 
@@ -188,6 +188,14 @@ for j = 1:length(alpha_guess)
     dev_ind_run_sum(j) = sum(dev_ind_run_n(j,:));
 end
 
+
+table = zeros(4,5);
+table(1,:) = dev_ind_forw_sum;
+table(2,:) = dev_ind_run_sum;
+table(3,:) = var_ind_forw_sum;
+table(4,:) = var_ind_run_sum;
+Luca = find(dev_ind_forw_sum == min(dev_ind_forw_sum))
+
 % we are taking into account the highest M (5th line) 
 
 figure(2)
@@ -198,10 +206,11 @@ plot(x_hat_run_n(1,:), 'LineWidth', 1.2)
 plot(x_hat_run_n(2,:), 'LineWidth', 1.2)
 plot(x_hat_run_n(3,:), 'LineWidth', 1.2)
 plot(x_hat_run_n(4,:), 'LineWidth', 1.2)
+plot(x_hat_run_n(5,:), 'LineWidth', 1.2)
 grid on; grid minor
 xlabel('Steps', 'FontSize', 30)
 ylabel('Data', 'FontSize', 30)
-legend('Trajectory', 'Measurements', 'M = 50', 'M = 100', 'M = 150', 'M = 200', 'FontSize', 30)
+legend('Trajectory', 'Measurements', 'M = 10', 'M = 20', 'M = 30', 'M = 40', 'M = 50', 'FontSize', 30)
 
 figure(3)
 hold on
@@ -211,11 +220,12 @@ plot(x_hat_forw_n(1,:), 'LineWidth', 1.2)
 plot(x_hat_forw_n(2,:), 'LineWidth', 1.2)
 plot(x_hat_forw_n(3,:), 'LineWidth', 1.2)
 plot(x_hat_forw_n(4,:), 'LineWidth', 1.2)
+plot(x_hat_forw_n(5,:), 'LineWidth', 1.2)
 grid on; grid minor
 xlabel('Steps', 'FontSize', 30)
 ylabel('Data', 'FontSize', 30)
 legend('Trajectory', 'Measurements', '$\alpha = 0.05$', '$\alpha = 0.1$',...
-    '$\alpha = 0.15$', '$\alpha = 0.2$', 'FontSize', 30)
+    '$\alpha = 0.15$', '$\alpha = 0.2$', '$\alpha = 0.25$', 'FontSize', 30)
 
 %% 4) Second trajectory: Generate cyclic trajectory 𝑋𝑖 according to the equation 
 % 5) Generate measurements 𝑧𝑖 of the process 𝑋𝑖  
